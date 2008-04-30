@@ -21,6 +21,7 @@
 /*namespace Nette;*/
 
 
+
 require_once dirname(__FILE__) . '/IComponent.php';
 
 require_once dirname(__FILE__) . '/Object.php';
@@ -59,7 +60,6 @@ abstract class Component extends Object implements IComponent
 
 
 
-
 	/**
 	 */
 	public function __construct(IComponentContainer $parent = NULL, $name = NULL)
@@ -75,9 +75,9 @@ abstract class Component extends Object implements IComponent
 
 
 	/**
-	 * Lookup hierarchy for object specified by class or interface name.
-	 * @param  string
-	 * @param  bool
+	 * Lookup hierarchy for component specified by class or interface name.
+	 * @param  string class/interface type
+	 * @param  bool   throw exception if component doesn't exist?
 	 * @return IComponent
 	 */
 	public function lookup($type, $need = FALSE)
@@ -110,10 +110,10 @@ abstract class Component extends Object implements IComponent
 
 
 	/**
-	 * Lookup for object specified by class or interface name. Returns backtrace path.
+	 * Lookup for component specified by class or interface name. Returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
-	 * @param  string
-	 * @param  bool
+	 * @param  string class/interface type
+	 * @param  bool   throw exception if component doesn't exist?
 	 * @return string
 	 */
 	public function lookupPath($type, $need = FALSE)
