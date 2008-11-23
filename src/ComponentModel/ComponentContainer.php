@@ -63,11 +63,13 @@ class ComponentContainer extends Component implements IComponentContainer
 			$name = $component->getName();
 		}
 
-		if ($name == NULL) { // intentionally ==
-			throw new /*\*/InvalidArgumentException('Component name is required.');
-		}
+		if (is_int($name)) {
+			$name = (string) $name;
 
-		if (!is_string($name) || !preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
+		} elseif (!is_string($name)) {
+			throw new /*\*/InvalidArgumentException("Component name must be string, " . gettype($name) . " is given.");
+
+		} elseif (!preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
 			throw new /*\*/InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' is invalid.");
 		}
 
