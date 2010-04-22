@@ -4,8 +4,8 @@
  * Nette Framework
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @license    http://nettephp.com/license  Nette license
- * @link       http://nettephp.com
+ * @license    http://nette.org/license  Nette license
+ * @link       http://nette.org
  * @category   Nette
  * @package    Nette
  */
@@ -49,7 +49,7 @@ interface IComponentContainer extends IComponent
 	 * Iterates over a components.
 	 * @param  bool    recursive?
 	 * @param  string  class types filter
-	 * @return \ArrayIterator
+	 * @return \Iterator
 	 */
 	function getComponents($deep = FALSE, $filterType = NULL);
 
