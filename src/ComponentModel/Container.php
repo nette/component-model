@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * ComponentContainer is default implementation of IComponentContainer.
+ * ComponentContainer is default implementation of IContainer.
  *
  * @author     David Grudl
  *
@@ -24,7 +24,7 @@ use Nette;
  */
 class Container extends Component implements IContainer
 {
-	/** @var array of IComponent */
+	/** @var IComponent[] */
 	private $components = array();
 
 	/** @var IComponent|NULL */
@@ -32,12 +32,12 @@ class Container extends Component implements IContainer
 
 
 
-	/********************* interface IComponentContainer ****************d*g**/
+	/********************* interface IContainer ****************d*g**/
 
 
 
 	/**
-	 * Adds the specified component to the IComponentContainer.
+	 * Adds the specified component to the IContainer.
 	 * @param  IComponent
 	 * @param  string
 	 * @param  string
@@ -101,7 +101,7 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Removes a component from the IComponentContainer.
+	 * Removes a component from the IContainer.
 	 * @param  IComponent
 	 * @return void
 	 */
