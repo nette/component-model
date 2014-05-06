@@ -1,6 +1,9 @@
 Nette Component Model
 =====================
 
+[![Downloads this Month](https://img.shields.io/packagist/dm/nette/component-model.svg)](https://packagist.org/packages/nette/component-model)
+[![Build Status](https://travis-ci.org/nette/component-model.svg?branch=master)](https://travis-ci.org/nette/component-model)
+
 Components are the foundation of reusable code. They make your work easier and allow you to profit from community work. Components are wonderful.
 Nette Framework introduces several classes and interfaces for all these types of components.
 
@@ -84,7 +87,3 @@ foreach ($form->getComponents(TRUE, 'Nette\Forms\IControl') as $control) {
     }
 }
 ```
-
------
-
-[![Build Status](https://secure.travis-ci.org/nette/component-model.png?branch=master)](http://travis-ci.org/nette/component-model)
