@@ -26,7 +26,7 @@ $a = new TestClass;
 $b = $a->getComponent('b');
 
 Assert::same( 'b', $b->name );
-Assert::same( 1, count($a->getComponents()) );
+Assert::count( 1, $a->getComponents() );
 
 
 Assert::exception(function() use ($a) {
@@ -35,4 +35,4 @@ Assert::exception(function() use ($a) {
 
 
 $a->removeComponent($b);
-Assert::same( 0, count($a->getComponents()) );
+Assert::count( 0, $a->getComponents() );
