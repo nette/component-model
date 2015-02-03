@@ -139,8 +139,13 @@ class Container extends Component implements IContainer
 
 		if (!isset($this->components[$name])) {
 			$component = $this->createComponent($name);
-			if ($component instanceof IComponent && $component->getParent() === NULL) {
-				$this->addComponent($component, $name);
+			if ($component) {
+				if (!$component instanceof IComponent) {
+					throw new Nette\UnexpectedValueException('Method createComponent() did not return Nette\ComponentModel\IComponent.');
+
+				} elseif (!isset($this->components[$name])) {
+					$this->addComponent($component, $name);
+				}
 			}
 		}
 
