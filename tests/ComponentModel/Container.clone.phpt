@@ -48,7 +48,7 @@ class TestClass extends Container implements ArrayAccess
 
 
 Object::extensionMethod('Nette\\ComponentModel\\IContainer::export', function($thisObj) {
-	$res = array("({$thisObj->reflection->name})" => $thisObj->name);
+	$res = array("({$thisObj->getReflection()->getName()})" => $thisObj->getName());
 	if ($thisObj instanceof IContainer) {
 		foreach ($thisObj->getComponents() as $name => $obj) {
 			$res['children'][$name] = $obj->export();
