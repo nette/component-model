@@ -23,4 +23,4 @@ class TestClass extends Container
 
 
 $a = new TestClass;
-Assert::same( 'b', $a->getComponent('b')->name );
+Assert::same( 'b', $a->getComponent('b')->getName() );

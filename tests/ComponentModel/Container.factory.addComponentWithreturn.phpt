@@ -24,9 +24,9 @@ class TestClass extends Container
 
 
 $a = new TestClass;
-Assert::same( 'b', $a->getComponent('b')->name );
+Assert::same( 'b', $a->getComponent('b')->getName() );
 
 
 Assert::exception(function() use ($a) {
-	$a->getComponent('B')->name;
+	$a->getComponent('B')->getName();
 }, 'InvalidArgumentException', "Component with name 'B' does not exist.");
