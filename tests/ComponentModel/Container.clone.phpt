@@ -48,7 +48,7 @@ class TestClass extends Container implements ArrayAccess
 
 
 Object::extensionMethod('Nette\\ComponentModel\\IContainer::export', function($thisObj) {
-	$res = array("({$thisObj->getReflection()->getName()})" => $thisObj->getName());
+	$res = ["({$thisObj->getReflection()->getName()})" => $thisObj->getName()];
 	if ($thisObj instanceof IContainer) {
 		foreach ($thisObj->getComponents() as $name => $obj) {
 			$res['children'][$name] = $obj->export();
@@ -74,10 +74,10 @@ $a['b']->monitor('a');
 $a['b']->monitor('a');
 $a['b']['c']->monitor('a');
 
-Assert::same( array(
+Assert::same( [
 	'B::ATTACHED(A)',
 	'C::ATTACHED(A)',
-), Notes::fetch());
+], Notes::fetch());
 
 Assert::same( 'b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', FALSE) );
 
@@ -85,9 +85,9 @@ Assert::same( 'b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', FALSE) );
 // ==> clone 'c'
 $dolly = clone $a['b']['c'];
 
-Assert::same( array(
+Assert::same( [
 	'C::detached(A)',
-), Notes::fetch());
+], Notes::fetch());
 
 Assert::null( $dolly['d']['e']->lookupPath('A', FALSE) );
 
@@ -97,58 +97,58 @@ Assert::same( 'd-e', $dolly['d']['e']->lookupPath('C', FALSE) );
 // ==> clone 'b'
 $dolly = clone $a['b'];
 
-Assert::same( array(
+Assert::same( [
 	'C::detached(A)',
 	'B::detached(A)',
-), Notes::fetch());
+], Notes::fetch());
 
 
 // ==> a['dolly'] = 'b'
 $a['dolly'] = $dolly;
 
-Assert::same( array(
+Assert::same( [
 	'C::ATTACHED(A)',
 	'B::ATTACHED(A)',
-), Notes::fetch());
+], Notes::fetch());
 
-Assert::same( array(
+Assert::same( [
 	'(A)' => NULL,
-	'children' => array(
-		'b' => array(
+	'children' => [
+		'b' => [
 			'(B)' => 'b',
-			'children' => array(
-				'c' => array(
+			'children' => [
+				'c' => [
 					'(C)' => 'c',
-					'children' => array(
-						'd' => array(
+					'children' => [
+						'd' => [
 							'(D)' => 'd',
-							'children' => array(
-								'e' => array(
+							'children' => [
+								'e' => [
 									'(E)' => 'e',
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-		'dolly' => array(
+								],
+							],
+						],
+					],
+				],
+			],
+		],
+		'dolly' => [
 			'(B)' => 'dolly',
-			'children' => array(
-				'c' => array(
+			'children' => [
+				'c' => [
 					'(C)' => 'c',
-					'children' => array(
-						'd' => array(
+					'children' => [
+						'd' => [
 							'(D)' => 'd',
-							'children' => array(
-								'e' => array(
+							'children' => [
+								'e' => [
 									'(E)' => 'e',
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	),
-), $a->export() );
+								],
+							],
+						],
+					],
+				],
+			],
+		],
+	],
+], $a->export() );

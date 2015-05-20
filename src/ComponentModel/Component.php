@@ -29,7 +29,7 @@ abstract class Component extends Nette\Object implements IComponent
 	private $name;
 
 	/** @var array of [type => [obj, depth, path, is_monitored?]] */
-	private $monitors = array();
+	private $monitors = [];
 
 
 	public function __construct(IContainer $parent = NULL, $name = NULL)
@@ -69,10 +69,10 @@ abstract class Component extends Nette\Object implements IComponent
 			}
 
 			if ($obj) {
-				$this->monitors[$type] = array($obj, $depth, substr($path, 1), FALSE);
+				$this->monitors[$type] = [$obj, $depth, substr($path, 1), FALSE];
 
 			} else {
-				$this->monitors[$type] = array(NULL, NULL, NULL, FALSE); // not found
+				$this->monitors[$type] = [NULL, NULL, NULL, FALSE]; // not found
 			}
 		}
 
@@ -205,7 +205,7 @@ abstract class Component extends Nette\Object implements IComponent
 				$this->name = $name;
 			}
 
-			$tmp = array();
+			$tmp = [];
 			$this->refreshMonitors(0, $tmp);
 		}
 		return $this;
@@ -230,7 +230,7 @@ abstract class Component extends Nette\Object implements IComponent
 	 * @param  array
 	 * @return void
 	 */
-	private function refreshMonitors($depth, & $missing = NULL, & $listeners = array())
+	private function refreshMonitors($depth, & $missing = NULL, & $listeners = [])
 	{
 		if ($this instanceof IContainer) {
 			foreach ($this->getComponents() as $component) {
@@ -244,8 +244,8 @@ abstract class Component extends Nette\Object implements IComponent
 			foreach ($this->monitors as $type => $rec) {
 				if (isset($rec[1]) && $rec[1] > $depth) {
 					if ($rec[3]) { // monitored
-						$this->monitors[$type] = array(NULL, NULL, NULL, TRUE);
-						$listeners[] = array($this, $rec[0]);
+						$this->monitors[$type] = [NULL, NULL, NULL, TRUE];
+						$listeners[] = [$this, $rec[0]];
 					} else { // not monitored, just randomly cached
 						unset($this->monitors[$type]);
 					}
@@ -261,12 +261,12 @@ abstract class Component extends Nette\Object implements IComponent
 					unset($this->monitors[$type]);
 
 				} elseif (isset($missing[$type])) { // known from previous lookup
-					$this->monitors[$type] = array(NULL, NULL, NULL, TRUE);
+					$this->monitors[$type] = [NULL, NULL, NULL, TRUE];
 
 				} else {
 					$this->monitors[$type] = NULL; // forces re-lookup
 					if ($obj = $this->lookup($type, FALSE)) {
-						$listeners[] = array($this, $obj);
+						$listeners[] = [$this, $obj];
 					} else {
 						$missing[$type] = TRUE;
 					}

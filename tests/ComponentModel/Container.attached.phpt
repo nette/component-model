@@ -62,18 +62,18 @@ $b['c']['d'] = $d;
 // 'a' becoming 'b' parent
 $a = new A;
 $a['b'] = $b;
-Assert::same( array(
+Assert::same( [
 	'C::ATTACHED(A)',
 	'B::ATTACHED(A)',
-), Notes::fetch());
+], Notes::fetch());
 
 
 // removing 'b' from 'a'
 unset($a['b']);
-Assert::same( array(
+Assert::same( [
 	'C::detached(A)',
 	'B::detached(A)',
-), Notes::fetch());
+], Notes::fetch());
 
 // 'a' becoming 'b' parent
 $a['b'] = $b;
@@ -121,7 +121,7 @@ $presenter['control'] = new FooControl();
 $presenter['form'] = new FooForm();
 $presenter['form']['form'] = new FooForm();
 
-Assert::same(array(
+Assert::same([
 	'FooControl::ATTACHED(FooPresenter)',
 	'FooForm::ATTACHED(FooForm)'
-), Notes::fetch());
+], Notes::fetch());

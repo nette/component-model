@@ -20,7 +20,7 @@ use Nette;
 class Container extends Component implements IContainer
 {
 	/** @var IComponent[] */
-	private $components = array();
+	private $components = [];
 
 	/** @var IComponent|NULL */
 	private $cloning;
@@ -71,7 +71,7 @@ class Container extends Component implements IContainer
 
 		try {
 			if (isset($this->components[$insertBefore])) {
-				$tmp = array();
+				$tmp = [];
 				foreach ($this->components as $k => $v) {
 					if ($k === $insertBefore) {
 						$tmp[$name] = $component;

@@ -33,67 +33,67 @@ $c->getComponent('one')->getComponent('inner2')->addComponent(new Button, 'butto
 
 // Normal
 $list = $c->getComponents();
-Assert::same( array(
+Assert::same( [
 	"one",
 	"two",
 	"button1",
-), array_keys(iterator_to_array($list)) );
+], array_keys(iterator_to_array($list)) );
 
 
 // Filter
 $list = $c->getComponents(FALSE, 'Button');
-Assert::same( array(
+Assert::same( [
 	"button1",
-), array_keys(iterator_to_array($list)) );
+], array_keys(iterator_to_array($list)) );
 
 
 // RecursiveIteratorIterator
 $list = new RecursiveIteratorIterator($c->getComponents(), 1);
-Assert::same( array(
+Assert::same( [
 	"one",
 	"inner",
 	"inner2",
 	"button2",
 	"two",
 	"button1",
-), array_keys(iterator_to_array($list)) );
+], array_keys(iterator_to_array($list)) );
 
 
 // Recursive
 $list = $c->getComponents(TRUE);
-Assert::same( array(
+Assert::same( [
 	"one",
 	"inner",
 	"inner2",
 	"button2",
 	"two",
 	"button1",
-), array_keys(iterator_to_array($list)) );
+], array_keys(iterator_to_array($list)) );
 
 
 // Recursive CHILD_FIRST
 $list = $c->getComponents(-1);
-Assert::same( array(
+Assert::same( [
 	"inner",
 	"button2",
 	"inner2",
 	"one",
 	"two",
 	"button1",
-), array_keys(iterator_to_array($list)) );
+], array_keys(iterator_to_array($list)) );
 
 
 // Recursive & filter I
 $list = $c->getComponents(TRUE, 'Button');
-Assert::same( array(
+Assert::same( [
 	"button2",
 	"button1",
-), array_keys(iterator_to_array($list)) );
+], array_keys(iterator_to_array($list)) );
 
 
 // Recursive & filter II
 $list = $c->getComponents(TRUE, 'Nette\ComponentModel\Container');
-Assert::same( array(
+Assert::same( [
 	"one",
 	"inner2",
-), array_keys(iterator_to_array($list)) );
+], array_keys(iterator_to_array($list)) );
