@@ -200,7 +200,7 @@ class Container extends Component implements IContainer
 			$iterator = new \RecursiveIteratorIterator($iterator, $deep);
 		}
 		if ($filterType) {
-			$iterator = new Nette\Iterators\Filter($iterator, function($item) use ($filterType) {
+			$iterator = new \CallbackFilterIterator($iterator, function($item) use ($filterType) {
 				return $item instanceof $filterType;
 			});
 		}
