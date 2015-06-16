@@ -277,8 +277,12 @@ abstract class Component extends Nette\Object implements IComponent
 
 		if ($depth === 0) { // call listeners
 			$method = $missing === NULL ? 'detached' : 'attached';
+			$prev = [];
 			foreach ($listeners as $item) {
-				$item[0]->$method($item[1]);
+				if (!in_array($item, $prev, TRUE)) {
+					$item[0]->$method($item[1]);
+					$prev[] = $item;
+				}
 			}
 		}
 	}

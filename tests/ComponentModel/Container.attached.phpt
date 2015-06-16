@@ -107,6 +107,7 @@ class FooControl extends TestClass
 	{
 		parent::validateParent($parent);
 		$this->monitor('FooPresenter');
+		$this->monitor('TestClass'); // double
 	}
 
 }
