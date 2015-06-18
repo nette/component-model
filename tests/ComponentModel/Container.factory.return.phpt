@@ -4,8 +4,8 @@
  * Test: Nette\ComponentModel\Container component named factory 4.
  */
 
-use Nette\ComponentModel\Container,
-	Tester\Assert;
+use Nette\ComponentModel\Container;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -25,14 +25,14 @@ class TestClass extends Container
 $a = new TestClass;
 $b = $a->getComponent('b');
 
-Assert::same( 'b', $b->getName() );
-Assert::count( 1, $a->getComponents() );
+Assert::same('b', $b->getName());
+Assert::count(1, $a->getComponents());
 
 
-Assert::exception(function() use ($a) {
+Assert::exception(function () use ($a) {
 	$a->getComponent('B')->getName();
 }, 'InvalidArgumentException', "Component with name 'B' does not exist.");
 
 
 $a->removeComponent($b);
-Assert::count( 0, $a->getComponents() );
+Assert::count(0, $a->getComponents());

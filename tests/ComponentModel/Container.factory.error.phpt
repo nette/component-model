@@ -4,8 +4,8 @@
  * Test: Nette\ComponentModel\Container component named factory.
  */
 
-use Nette\ComponentModel\Container,
-	Tester\Assert;
+use Nette\ComponentModel\Container;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +21,7 @@ class TestClass extends Container
 }
 
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$a = new TestClass;
 	$a->getComponent('b');
 }, 'Nette\UnexpectedValueException', 'Method TestClass::createComponentB() did not return or create the desired component.');

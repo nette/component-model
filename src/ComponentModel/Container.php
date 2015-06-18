@@ -201,7 +201,7 @@ class Container extends Component implements IContainer
 		}
 		if ($filterType) {
 			$class = PHP_VERSION_ID < 50400 ? 'Nette\Iterators\Filter' : 'CallbackFilterIterator';
-			$iterator = new $class($iterator, function($item) use ($filterType) {
+			$iterator = new $class($iterator, function ($item) use ($filterType) {
 				return $item instanceof $filterType;
 			});
 		}

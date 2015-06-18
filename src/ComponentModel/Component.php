@@ -234,7 +234,7 @@ abstract class Component extends Nette\Object implements IComponent
 	{
 		if ($this instanceof IContainer) {
 			foreach ($this->getComponents() as $component) {
-				if ($component instanceof Component) {
+				if ($component instanceof self) {
 					$component->refreshMonitors($depth + 1, $missing, $listeners);
 				}
 			}
