@@ -175,7 +175,7 @@ class Container extends Component implements IContainer
 	{
 		$ucname = ucfirst($name);
 		$method = 'createComponent' . $ucname;
-		if ($ucname !== $name && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
+		if ($ucname !== $name && method_exists($this, $method) && (new \ReflectionMethod($this, $method))->getName() === $method) {
 			$component = $this->$method($name);
 			if (!$component instanceof IComponent && !isset($this->components[$name])) {
 				$class = get_class($this);
