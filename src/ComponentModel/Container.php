@@ -13,8 +13,6 @@ use Nette;
 /**
  * ComponentContainer is default implementation of IContainer.
  *
- * @author     David Grudl
- *
  * @property-read \ArrayIterator $components
  */
 class Container extends Component implements IContainer
