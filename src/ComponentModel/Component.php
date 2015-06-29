@@ -15,8 +15,6 @@ use Nette;
  *
  * Components are objects implementing IComponent. They has parent component and own name.
  *
- * @author     David Grudl
- *
  * @property-read string $name
  * @property-read IContainer|NULL $parent
  */
