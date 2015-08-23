@@ -27,4 +27,4 @@ $a->addComponent(new TestClass, 'a');
 
 Assert::exception(function () use ($a) {
 	$a->getComponent('b');
-}, 'Nette\InvalidStateException', "Component 'a' already has a parent.");
+}, Nette\InvalidStateException::class, "Component 'a' already has a parent.");

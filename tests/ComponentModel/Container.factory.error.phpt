@@ -24,4 +24,4 @@ class TestClass extends Container
 Assert::exception(function () {
 	$a = new TestClass;
 	$a->getComponent('b');
-}, 'Nette\UnexpectedValueException', 'Method TestClass::createComponentB() did not return or create the desired component.');
+}, Nette\UnexpectedValueException::class, 'Method TestClass::createComponentB() did not return or create the desired component.');
