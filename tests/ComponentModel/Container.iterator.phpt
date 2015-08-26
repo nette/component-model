@@ -92,7 +92,7 @@ Assert::same([
 
 
 // Recursive & filter II
-$list = $c->getComponents(TRUE, 'Nette\ComponentModel\Container');
+$list = $c->getComponents(TRUE, Nette\ComponentModel\Container::class);
 Assert::same([
 	'one',
 	'inner2',

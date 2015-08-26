@@ -49,7 +49,7 @@ class UploadControl extends Nette\Forms\Controls\BaseControl
 {
     public function __construct($label)
     {
-        $this->monitor('Nette\Forms\Form');
+        $this->monitor(Nette\Forms\Form::class);
         // ...
     }
 
@@ -82,7 +82,7 @@ For example, this is the way how validation of forms is "internally"((this is do
 
 ```php
 $valid = TRUE;
-foreach ($form->getComponents(TRUE, 'Nette\Forms\IControl') as $control) {
+foreach ($form->getComponents(TRUE, Nette\Forms\IControl::class) as $control) {
     if (!$control->getRules()->validate()) {
         $valid = FALSE;
         break;

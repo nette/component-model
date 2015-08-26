@@ -27,4 +27,4 @@ $a->addComponent(new TestClass, 'a');
 
 Assert::exception(function () use ($a) {
 	$a->getComponent('b');
-}, 'Nette\UnexpectedValueException', 'Method createComponent() did not return Nette\ComponentModel\IComponent.');
+}, Nette\UnexpectedValueException::class, 'Method createComponent() did not return Nette\ComponentModel\IComponent.');
