@@ -159,7 +159,11 @@ class Container extends Component implements IContainer
 			}
 
 		} elseif ($need) {
-			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist.");
+			$hint = Nette\Utils\ObjectMixin::getSuggestion(array_merge(
+				array_keys($this->components),
+				array_map('lcfirst', preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this)))
+			), $name);
+			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist" . ($hint ? ", did you mean '$hint'?" : '.'));
 		}
 	}
 
