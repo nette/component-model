@@ -30,8 +30,9 @@ abstract class Component extends Nette\Object implements IComponent
 	private $monitors = [];
 
 
-	public function __construct(IContainer $parent = NULL, $name = NULL)
+	public function __construct()
 	{
+		list($parent, $name) = func_get_args() + [NULL, NULL];
 		if ($parent !== NULL) {
 			$parent->addComponent($this, $name);
 
