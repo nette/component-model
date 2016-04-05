@@ -18,8 +18,10 @@ use Nette;
  * @property-read string $name
  * @property-read IContainer|NULL $parent
  */
-abstract class Component extends Nette\Object implements IComponent
+abstract class Component implements IComponent
 {
+	use Nette\SmartObject;
+
 	/** @var IContainer */
 	private $parent;
 
