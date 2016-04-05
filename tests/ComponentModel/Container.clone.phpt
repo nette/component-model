@@ -5,7 +5,6 @@
  */
 
 use Nette\ComponentModel\Container;
-use Nette\Object;
 use Nette\ComponentModel\IContainer;
 use Tester\Assert;
 
@@ -47,15 +46,15 @@ class TestClass extends Container implements ArrayAccess
 }
 
 
-Object::extensionMethod('Nette\\ComponentModel\\IContainer::export', function ($thisObj) {
-	$res = ["({$thisObj->getReflection()->getName()})" => $thisObj->getName()];
-	if ($thisObj instanceof IContainer) {
-		foreach ($thisObj->getComponents() as $name => $obj) {
-			$res['children'][$name] = $obj->export();
+function export($obj) {
+	$res = ['(' . get_class($obj) . ')' => $obj->getName()];
+	if ($obj instanceof IContainer) {
+		foreach ($obj->getComponents() as $name => $child) {
+			$res['children'][$name] = export($child);
 		}
 	}
 	return $res;
-});
+};
 
 
 class A extends TestClass {}
@@ -151,4 +150,4 @@ Assert::same([
 			],
 		],
 	],
-], $a->export());
+], export($a));
