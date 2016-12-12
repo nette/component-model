@@ -172,7 +172,7 @@ abstract class Component extends Nette\Object implements IComponent
 	 * not be called by applications
 	 * @param  IContainer  New parent or null if this component is being removed from a parent
 	 * @param  string
-	 * @return self
+	 * @return static
 	 * @throws Nette\InvalidStateException
 	 * @internal
 	 */
