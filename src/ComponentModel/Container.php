@@ -32,7 +32,7 @@ class Container extends Component implements IContainer
 	 * @param  IComponent
 	 * @param  string
 	 * @param  string
-	 * @return self
+	 * @return static
 	 * @throws Nette\InvalidStateException
 	 */
 	public function addComponent(IComponent $component, $name, $insertBefore = NULL)
