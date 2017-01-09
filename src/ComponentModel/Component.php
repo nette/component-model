@@ -231,7 +231,7 @@ abstract class Component implements IComponent
 	 * @param  array
 	 * @return void
 	 */
-	private function refreshMonitors($depth, & $missing = NULL, & $listeners = [])
+	private function refreshMonitors($depth, &$missing = NULL, &$listeners = [])
 	{
 		if ($this instanceof IContainer) {
 			foreach ($this->getComponents() as $component) {
