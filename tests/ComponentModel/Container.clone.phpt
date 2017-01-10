@@ -4,6 +4,8 @@
  * Test: Nette\ComponentModel\Container cloning.
  */
 
+declare(strict_types=1);
+
 use Nette\ComponentModel\Container;
 use Nette\ComponentModel\IContainer;
 use Tester\Assert;

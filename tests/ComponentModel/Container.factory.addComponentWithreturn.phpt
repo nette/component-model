@@ -4,6 +4,8 @@
  * Test: Nette\ComponentModel\Container component named factory 6.
  */
 
+declare(strict_types=1);
+
 use Nette\ComponentModel\Container;
 use Tester\Assert;
 

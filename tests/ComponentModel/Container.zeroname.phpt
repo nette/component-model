@@ -4,6 +4,8 @@
  * Test: Nette\ComponentModel\Container and '0' name.
  */
 
+declare(strict_types=1);
+
 use Nette\ComponentModel\Container;
 use Tester\Assert;
 
