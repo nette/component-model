@@ -127,7 +127,7 @@ class Container extends Component implements IContainer
 		} else {
 			$a = strpos($name, self::NAME_SEPARATOR);
 			if ($a !== FALSE) {
-				$ext = (string) substr($name, $a + 1);
+				$ext = substr($name, $a + 1);
 				$name = substr($name, 0, $a);
 			}
 

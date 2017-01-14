@@ -34,7 +34,7 @@ abstract class Component implements IComponent
 
 	public function __construct()
 	{
-		list($parent, $name) = func_get_args() + [NULL, NULL];
+		[$parent, $name] = func_get_args() + [NULL, NULL];
 		if ($parent !== NULL) {
 			$parent->addComponent($this, $name);
 
