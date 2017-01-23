@@ -47,10 +47,10 @@ abstract class Component implements IComponent
 	/**
 	 * Lookup hierarchy for component specified by class or interface name.
 	 * @param  string|NULL
-	 * @param  bool   throw exception if component doesn't exist?
+	 * @param  bool
 	 * @return IComponent|NULL
 	 */
-	public function lookup($type, $need = TRUE)
+	public function lookup($type, $throw = TRUE)
 	{
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
@@ -77,7 +77,7 @@ abstract class Component implements IComponent
 			}
 		}
 
-		if ($need && $this->monitors[$type][0] === NULL) {
+		if ($throw && $this->monitors[$type][0] === NULL) {
 			throw new Nette\InvalidStateException("Component '$this->name' is not attached to '$type'.");
 		}
 
@@ -89,12 +89,12 @@ abstract class Component implements IComponent
 	 * Lookup for component specified by class or interface name. Returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
 	 * @param  string|NULL
-	 * @param  bool   throw exception if component doesn't exist?
+	 * @param  bool
 	 * @return string|NULL
 	 */
-	public function lookupPath($type = NULL, $need = TRUE)
+	public function lookupPath($type = NULL, $throw = TRUE)
 	{
-		$this->lookup($type, $need);
+		$this->lookup($type, $throw);
 		return $this->monitors[$type][2];
 	}
 

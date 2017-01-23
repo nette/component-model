@@ -112,7 +112,7 @@ class Container extends Component implements IContainer
 	 * @param  bool   throw exception if component doesn't exist?
 	 * @return IComponent|NULL
 	 */
-	public function getComponent($name, $need = TRUE)
+	public function getComponent($name, $throw = TRUE)
 	{
 		if (isset($this->components[$name])) {
 			return $this->components[$name];
@@ -132,7 +132,7 @@ class Container extends Component implements IContainer
 			}
 
 			if ($name === '') {
-				if ($need) {
+				if ($throw) {
 					throw new Nette\InvalidArgumentException('Component or subcomponent name must not be empty string.');
 				}
 				return;
@@ -156,13 +156,13 @@ class Container extends Component implements IContainer
 				return $this->components[$name];
 
 			} elseif ($this->components[$name] instanceof IContainer) {
-				return $this->components[$name]->getComponent($ext, $need);
+				return $this->components[$name]->getComponent($ext, $throw);
 
-			} elseif ($need) {
+			} elseif ($throw) {
 				throw new Nette\InvalidArgumentException("Component with name '$name' is not container and cannot have '$ext' component.");
 			}
 
-		} elseif ($need) {
+		} elseif ($throw) {
 			$hint = Nette\Utils\ObjectMixin::getSuggestion(array_merge(
 				array_keys($this->components),
 				array_map('lcfirst', preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this)))
