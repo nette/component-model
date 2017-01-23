@@ -48,11 +48,9 @@ abstract class Component implements IComponent
 
 	/**
 	 * Lookup hierarchy for component specified by class or interface name.
-	 * @param  string|NULL
-	 * @param  bool
-	 * @return IComponent|NULL
+	 * @param  bool $throw   throw exception if component doesn't exist?
 	 */
-	public function lookup($type, $throw = TRUE)
+	public function lookup(?string $type, bool $throw = TRUE): ?IComponent
 	{
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
@@ -90,11 +88,8 @@ abstract class Component implements IComponent
 	/**
 	 * Lookup for component specified by class or interface name. Returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
-	 * @param  string|NULL
-	 * @param  bool
-	 * @return string|NULL
 	 */
-	public function lookupPath($type = NULL, $throw = TRUE)
+	public function lookupPath(string $type = NULL, bool $throw = TRUE): ?string
 	{
 		$this->lookup($type, $throw);
 		return $this->monitors[$type][2];
@@ -103,10 +98,8 @@ abstract class Component implements IComponent
 
 	/**
 	 * Starts monitoring.
-	 * @param  string
-	 * @return void
 	 */
-	public function monitor($type)
+	public function monitor(string $type): void
 	{
 		if (empty($this->monitors[$type][3])) {
 			if ($obj = $this->lookup($type, FALSE)) {
@@ -119,10 +112,8 @@ abstract class Component implements IComponent
 
 	/**
 	 * Stops monitoring.
-	 * @param  string
-	 * @return void
 	 */
-	public function unmonitor($type)
+	public function unmonitor(string $type): void
 	{
 		unset($this->monitors[$type]);
 	}
@@ -131,10 +122,8 @@ abstract class Component implements IComponent
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * @param  IComponent
-	 * @return void
 	 */
-	protected function attached($obj)
+	protected function attached(IComponent $obj): void
 	{
 	}
 
@@ -142,10 +131,8 @@ abstract class Component implements IComponent
 	/**
 	 * This method will be called before the component (or component's parent)
 	 * becomes detached from a monitored object. Do not call this method yourself.
-	 * @param  IComponent
-	 * @return void
 	 */
-	protected function detached($obj)
+	protected function detached(IComponent $obj): void
 	{
 	}
 
@@ -153,10 +140,7 @@ abstract class Component implements IComponent
 	/********************* interface IComponent ****************d*g**/
 
 
-	/**
-	 * @return string|NULL
-	 */
-	public function getName()
+	public function getName(): ?string
 	{
 		return $this->name;
 	}
@@ -164,9 +148,8 @@ abstract class Component implements IComponent
 
 	/**
 	 * Returns the container if any.
-	 * @return IContainer|NULL
 	 */
-	public function getParent()
+	public function getParent(): ?IContainer
 	{
 		return $this->parent;
 	}
@@ -175,13 +158,11 @@ abstract class Component implements IComponent
 	/**
 	 * Sets or removes the parent of this component. This method is managed by containers and should
 	 * not be called by applications
-	 * @param  IContainer
-	 * @param  string
 	 * @return static
 	 * @throws Nette\InvalidStateException
 	 * @internal
 	 */
-	public function setParent(IContainer $parent = NULL, $name = NULL)
+	public function setParent(?IContainer $parent, string $name = NULL)
 	{
 		if ($parent === NULL && $this->parent === NULL && $name !== NULL) {
 			$this->name = $name; // just rename
@@ -218,22 +199,18 @@ abstract class Component implements IComponent
 	/**
 	 * Is called by a component when it is about to be set new parent. Descendant can
 	 * override this method to disallow a parent change by throwing an Nette\InvalidStateException
-	 * @return void
 	 * @throws Nette\InvalidStateException
 	 */
-	protected function validateParent(IContainer $parent)
+	protected function validateParent(IContainer $parent): void
 	{
 	}
 
 
 	/**
 	 * Refreshes monitors.
-	 * @param  int
-	 * @param  array|NULL (array = attaching, NULL = detaching)
-	 * @param  array
-	 * @return void
+	 * @param  array|NULL $missing (array = attaching, NULL = detaching)
 	 */
-	private function refreshMonitors($depth, &$missing = NULL, &$listeners = [])
+	private function refreshMonitors(int $depth, array &$missing = NULL, array &$listeners = []): void
 	{
 		if ($this instanceof IContainer) {
 			foreach ($this->getComponents() as $component) {

@@ -18,23 +18,17 @@ interface IComponent
 	/** Separator for component names in path concatenation. */
 	const NAME_SEPARATOR = '-';
 
-	/**
-	 * @return string|NULL
-	 */
-	function getName();
+	function getName(): ?string;
 
 	/**
 	 * Returns the container if any.
-	 * @return IContainer|NULL
 	 */
-	function getParent();
+	function getParent(): ?IContainer;
 
 	/**
 	 * Sets the parent of this component.
-	 * @param  IContainer
-	 * @param  string
 	 * @return static
 	 */
-	function setParent(IContainer $parent = NULL, $name = NULL);
+	function setParent(?IContainer $parent, string $name = NULL);
 
 }

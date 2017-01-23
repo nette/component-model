@@ -18,32 +18,25 @@ interface IContainer extends IComponent
 
 	/**
 	 * Adds the specified component to the IContainer.
-	 * @param  IComponent
-	 * @param  string|int
+	 * @param  string|int $name
 	 * @return static
 	 */
 	function addComponent(IComponent $component, $name);
 
 	/**
 	 * Removes a component from the IContainer.
-	 * @param  IComponent
-	 * @return void
 	 */
-	function removeComponent(IComponent $component);
+	function removeComponent(IComponent $component): void;
 
 	/**
 	 * Returns single component.
 	 * @param  string|int
-	 * @return IComponent|NULL
 	 */
-	function getComponent($name);
+	function getComponent($name): ?IComponent;
 
 	/**
 	 * Iterates over a components.
-	 * @param  bool
-	 * @param  string
-	 * @return \Iterator
 	 */
-	function getComponents($deep = FALSE, $filterType = NULL);
+	function getComponents(bool $deep = FALSE, string $filterType = NULL): \Iterator;
 
 }

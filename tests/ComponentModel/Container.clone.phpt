@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 use Nette\ComponentModel\Container;
+use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
 use Tester\Assert;
 
@@ -16,12 +17,12 @@ require __DIR__ . '/../bootstrap.php';
 
 class TestClass extends Container implements ArrayAccess
 {
-	function attached($obj)
+	function attached(IComponent $obj): void
 	{
 		Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
-	function detached($obj)
+	function detached(IComponent $obj): void
 	{
 		Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}

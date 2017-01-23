@@ -31,9 +31,8 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Adds the specified component to the IContainer.
-	 * @param  IComponent
-	 * @param  string|int
-	 * @param  string|int
+	 * @param  string|int $name
+	 * @param  string|int $insertBefore
 	 * @return static
 	 * @throws Nette\InvalidStateException
 	 */
@@ -94,9 +93,8 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Removes a component from the IContainer.
-	 * @return void
 	 */
-	public function removeComponent(IComponent $component)
+	public function removeComponent(IComponent $component): void
 	{
 		$name = $component->getName();
 		if (!isset($this->components[$name]) || $this->components[$name] !== $component) {
@@ -112,9 +110,8 @@ class Container extends Component implements IContainer
 	 * Returns component specified by name or path.
 	 * @param  string|int
 	 * @param  bool   throw exception if component doesn't exist?
-	 * @return IComponent|NULL
 	 */
-	public function getComponent($name, $throw = TRUE)
+	public function getComponent($name, bool $throw = TRUE): ?IComponent
 	{
 		if (isset($this->components[$name])) {
 			return $this->components[$name];
@@ -137,7 +134,7 @@ class Container extends Component implements IContainer
 				if ($throw) {
 					throw new Nette\InvalidArgumentException('Component or subcomponent name must not be empty string.');
 				}
-				return;
+				return NULL;
 			}
 		}
 
@@ -171,15 +168,14 @@ class Container extends Component implements IContainer
 			), $name);
 			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist" . ($hint ? ", did you mean '$hint'?" : '.'));
 		}
+		return NULL;
 	}
 
 
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
-	 * @param  string
-	 * @return IComponent|NULL
 	 */
-	protected function createComponent($name)
+	protected function createComponent(string $name): ?IComponent
 	{
 		$ucname = ucfirst($name);
 		$method = 'createComponent' . $ucname;
@@ -191,16 +187,14 @@ class Container extends Component implements IContainer
 			}
 			return $component;
 		}
+		return NULL;
 	}
 
 
 	/**
 	 * Iterates over components.
-	 * @param  bool
-	 * @param  string
-	 * @return \Iterator
 	 */
-	public function getComponents($deep = FALSE, $filterType = NULL)
+	public function getComponents(bool $deep = FALSE, string $filterType = NULL): \Iterator
 	{
 		$iterator = new RecursiveComponentIterator($this->components);
 		if ($deep) {
@@ -217,10 +211,9 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Descendant can override this method to disallow insert a child by throwing an Nette\InvalidStateException.
-	 * @return void
 	 * @throws Nette\InvalidStateException
 	 */
-	protected function validateChildComponent(IComponent $child)
+	protected function validateChildComponent(IComponent $child): void
 	{
 	}
 
@@ -247,10 +240,9 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Is container cloning now?
-	 * @return IComponent|NULL
 	 * @internal
 	 */
-	public function _isCloning()
+	public function _isCloning(): ?IComponent
 	{
 		return $this->cloning;
 	}
