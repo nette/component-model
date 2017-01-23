@@ -36,9 +36,11 @@ abstract class Component implements IComponent
 	{
 		list($parent, $name) = func_get_args() + [null, null];
 		if ($parent !== null) {
+			trigger_error(__METHOD__ . '() argument $parent is deprecated, use $parent->addComponent() instead.', E_USER_DEPRECATED);
 			$parent->addComponent($this, $name);
 
-		} elseif (is_string($name)) {
+		} elseif ($name !== null) {
+			trigger_error(__METHOD__ . '() argument $name is deprecated, use $parent->setParent(null, $name) instead.', E_USER_DEPRECATED);
 			$this->name = $name;
 		}
 	}

@@ -20,7 +20,7 @@ class ComponentX extends Component
 {
 }
 
-$c = new Container(null, 'top');
+$c = new Container;
 
 $c->addComponent(new Container, 'one');
 $c->addComponent(new ComponentX, 'two');
