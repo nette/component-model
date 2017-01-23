@@ -13,7 +13,7 @@ use Nette;
 /**
  * ComponentContainer is default implementation of IContainer.
  *
- * @property-read \ArrayIterator $components
+ * @property-read \Iterator $components
  */
 class Container extends Component implements IContainer
 {
@@ -30,8 +30,8 @@ class Container extends Component implements IContainer
 	/**
 	 * Adds the specified component to the IContainer.
 	 * @param  IComponent
-	 * @param  string
-	 * @param  string
+	 * @param  string|int
+	 * @param  string|int
 	 * @return static
 	 * @throws Nette\InvalidStateException
 	 */
@@ -108,7 +108,7 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Returns component specified by name or path.
-	 * @param  string
+	 * @param  string|int
 	 * @param  bool   throw exception if component doesn't exist?
 	 * @return IComponent|NULL
 	 */
@@ -174,8 +174,8 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
-	 * @param  string      component name
-	 * @return IComponent  the created component (optionally)
+	 * @param  string
+	 * @return IComponent|NULL
 	 */
 	protected function createComponent($name)
 	{
@@ -194,9 +194,9 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Iterates over components.
-	 * @param  bool    recursive?
-	 * @param  string  class types filter
-	 * @return \ArrayIterator
+	 * @param  bool
+	 * @param  string
+	 * @return \Iterator
 	 */
 	public function getComponents($deep = FALSE, $filterType = NULL)
 	{
@@ -246,7 +246,7 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Is container cloning now?
-	 * @return NULL|IComponent
+	 * @return IComponent|NULL
 	 * @internal
 	 */
 	public function _isCloning()

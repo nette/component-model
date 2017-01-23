@@ -46,9 +46,9 @@ abstract class Component implements IComponent
 
 	/**
 	 * Lookup hierarchy for component specified by class or interface name.
-	 * @param  string class/interface type
+	 * @param  string|NULL
 	 * @param  bool   throw exception if component doesn't exist?
-	 * @return IComponent
+	 * @return IComponent|NULL
 	 */
 	public function lookup($type, $need = TRUE)
 	{
@@ -88,9 +88,9 @@ abstract class Component implements IComponent
 	/**
 	 * Lookup for component specified by class or interface name. Returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
-	 * @param  string class/interface type
+	 * @param  string|NULL
 	 * @param  bool   throw exception if component doesn't exist?
-	 * @return string
+	 * @return string|NULL
 	 */
 	public function lookupPath($type = NULL, $need = TRUE)
 	{
@@ -101,7 +101,7 @@ abstract class Component implements IComponent
 
 	/**
 	 * Starts monitoring.
-	 * @param  string class/interface type
+	 * @param  string
 	 * @return void
 	 */
 	public function monitor($type)
@@ -117,7 +117,7 @@ abstract class Component implements IComponent
 
 	/**
 	 * Stops monitoring.
-	 * @param  string class/interface type
+	 * @param  string
 	 * @return void
 	 */
 	public function unmonitor($type)
@@ -152,7 +152,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * @return string
+	 * @return string|NULL
 	 */
 	public function getName()
 	{
@@ -171,9 +171,9 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Sets the parent of this component. This method is managed by containers and should
+	 * Sets or removes the parent of this component. This method is managed by containers and should
 	 * not be called by applications
-	 * @param  IContainer  New parent or null if this component is being removed from a parent
+	 * @param  IContainer
 	 * @param  string
 	 * @return static
 	 * @throws Nette\InvalidStateException

@@ -17,7 +17,7 @@ interface IComponent
 	const NAME_SEPARATOR = '-';
 
 	/**
-	 * @return string
+	 * @return string|NULL
 	 */
 	function getName();
 
@@ -31,7 +31,7 @@ interface IComponent
 	 * Sets the parent of this component.
 	 * @param  IContainer
 	 * @param  string
-	 * @return void
+	 * @return static
 	 */
 	function setParent(IContainer $parent = NULL, $name = NULL);
 
