@@ -204,8 +204,7 @@ class Container extends Component implements IContainer
 	{
 		$iterator = new RecursiveComponentIterator($this->components);
 		if ($deep) {
-			$deep = $deep > 0 ? \RecursiveIteratorIterator::SELF_FIRST : \RecursiveIteratorIterator::CHILD_FIRST;
-			$iterator = new \RecursiveIteratorIterator($iterator, $deep);
+			$iterator = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
 		}
 		if ($filterType) {
 			$iterator = new \CallbackFilterIterator($iterator, function ($item) use ($filterType) {

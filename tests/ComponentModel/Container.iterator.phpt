@@ -73,18 +73,6 @@ Assert::same([
 ], array_keys(iterator_to_array($list)));
 
 
-// Recursive CHILD_FIRST
-$list = $c->getComponents(-1);
-Assert::same([
-	'inner',
-	'button2',
-	'inner2',
-	'one',
-	'two',
-	'button1',
-], array_keys(iterator_to_array($list)));
-
-
 // Recursive & filter I
 $list = $c->getComponents(TRUE, 'Button');
 Assert::same([
