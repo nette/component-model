@@ -16,7 +16,7 @@ namespace Nette\ComponentModel;
 interface IComponent
 {
 	/** Separator for component names in path concatenation. */
-	const NAME_SEPARATOR = '-';
+	public const NAME_SEPARATOR = '-';
 
 	function getName(): ?string;
 
