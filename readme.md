@@ -7,6 +7,14 @@ Nette Component Model
 [![Latest Stable Version](https://poser.pugx.org/nette/component-model/v/stable)](https://github.com/nette/component-model/releases)
 [![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/component-model/blob/master/license.md)
 
+Install it using Composer:
+
+```
+composer require nette/component-model
+```
+
+The last stable release requires PHP version 5.6 or newer (is compatible with PHP 7.0 and 7.1). The dev-master version requires PHP 7.1.
+
 Components are the foundation of reusable code. They make your work easier and allow you to profit from community work. Components are wonderful.
 Nette Framework introduces several classes and interfaces for all these types of components.
 
