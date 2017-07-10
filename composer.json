@@ -1,6 +1,6 @@
 {
 	"name": "nette/component-model",
-	"description": "⚛ Component model foundation for Nette",
+	"description": "⚛ Nette Component Model",
 	"keywords": ["nette", "components"],
 	"homepage": "https://nette.org",
 	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
