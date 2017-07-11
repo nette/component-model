@@ -17,37 +17,37 @@ require __DIR__ . '/../bootstrap.php';
 
 class TestClass extends Container implements ArrayAccess
 {
-	function attached(IComponent $obj): void
+	public function attached(IComponent $obj): void
 	{
 		Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
 
-	function detached(IComponent $obj): void
+	public function detached(IComponent $obj): void
 	{
 		Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
 
 
-	function offsetSet($name, $component)
+	public function offsetSet($name, $component)
 	{
 		$this->addComponent($component, $name);
 	}
 
 
-	function offsetGet($name)
+	public function offsetGet($name)
 	{
 		return $this->getComponent($name, true);
 	}
 
 
-	function offsetExists($name)
+	public function offsetExists($name)
 	{
 		return $this->getComponent($name) !== null;
 	}
 
 
-	function offsetUnset($name)
+	public function offsetUnset($name)
 	{
 		$this->removeComponent($this->getComponent($name, true));
 	}
@@ -63,7 +63,7 @@ function export($obj)
 		}
 	}
 	return $res;
-};
+}
 
 
 class A extends TestClass
