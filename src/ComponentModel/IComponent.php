@@ -17,13 +17,13 @@ interface IComponent
 	const NAME_SEPARATOR = '-';
 
 	/**
-	 * @return string|NULL
+	 * @return string|null
 	 */
 	function getName();
 
 	/**
 	 * Returns the container if any.
-	 * @return IContainer|NULL
+	 * @return IContainer|null
 	 */
 	function getParent();
 
@@ -33,5 +33,5 @@ interface IComponent
 	 * @param  string
 	 * @return static
 	 */
-	function setParent(IContainer $parent = NULL, $name = NULL);
+	function setParent(IContainer $parent = null, $name = null);
 }

@@ -20,7 +20,7 @@ class Container extends Component implements IContainer
 	/** @var IComponent[] */
 	private $components = [];
 
-	/** @var IComponent|NULL */
+	/** @var IComponent|null */
 	private $cloning;
 
 
@@ -35,9 +35,9 @@ class Container extends Component implements IContainer
 	 * @return static
 	 * @throws Nette\InvalidStateException
 	 */
-	public function addComponent(IComponent $component, $name, $insertBefore = NULL)
+	public function addComponent(IComponent $component, $name, $insertBefore = null)
 	{
-		if ($name === NULL) {
+		if ($name === null) {
 			$name = $component->getName();
 		}
 
@@ -62,7 +62,7 @@ class Container extends Component implements IContainer
 				throw new Nette\InvalidStateException("Circular reference detected while adding component '$name'.");
 			}
 			$obj = $obj->getParent();
-		} while ($obj !== NULL);
+		} while ($obj !== null);
 
 		// user checking
 		$this->validateChildComponent($component);
@@ -102,7 +102,7 @@ class Container extends Component implements IContainer
 		}
 
 		unset($this->components[$name]);
-		$component->setParent(NULL);
+		$component->setParent(null);
 	}
 
 
@@ -110,9 +110,9 @@ class Container extends Component implements IContainer
 	 * Returns component specified by name or path.
 	 * @param  string|int
 	 * @param  bool   throw exception if component doesn't exist?
-	 * @return IComponent|NULL
+	 * @return IComponent|null
 	 */
-	public function getComponent($name, $throw = TRUE)
+	public function getComponent($name, $throw = true)
 	{
 		if (isset($this->components[$name])) {
 			return $this->components[$name];
@@ -126,7 +126,7 @@ class Container extends Component implements IContainer
 
 		} else {
 			$a = strpos($name, self::NAME_SEPARATOR);
-			if ($a !== FALSE) {
+			if ($a !== false) {
 				$ext = (string) substr($name, $a + 1);
 				$name = substr($name, 0, $a);
 			}
@@ -175,7 +175,7 @@ class Container extends Component implements IContainer
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
 	 * @param  string
-	 * @return IComponent|NULL
+	 * @return IComponent|null
 	 */
 	protected function createComponent($name)
 	{
@@ -198,7 +198,7 @@ class Container extends Component implements IContainer
 	 * @param  string
 	 * @return \Iterator
 	 */
-	public function getComponents($deep = FALSE, $filterType = NULL)
+	public function getComponents($deep = false, $filterType = null)
 	{
 		$iterator = new RecursiveComponentIterator($this->components);
 		if ($deep) {
@@ -238,7 +238,7 @@ class Container extends Component implements IContainer
 			foreach ($this->components as $name => $component) {
 				$this->components[$name] = clone $component;
 			}
-			$oldMyself->cloning = NULL;
+			$oldMyself->cloning = null;
 		}
 		parent::__clone();
 	}
@@ -246,7 +246,7 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Is container cloning now?
-	 * @return IComponent|NULL
+	 * @return IComponent|null
 	 * @internal
 	 */
 	public function _isCloning()

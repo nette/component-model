@@ -16,7 +16,7 @@ use Nette;
  * Components are objects implementing IComponent. They has parent component and own name.
  *
  * @property-read string $name
- * @property-read IContainer|NULL $parent
+ * @property-read IContainer|null $parent
  */
 abstract class Component implements IComponent
 {
@@ -34,8 +34,8 @@ abstract class Component implements IComponent
 
 	public function __construct()
 	{
-		list($parent, $name) = func_get_args() + [NULL, NULL];
-		if ($parent !== NULL) {
+		list($parent, $name) = func_get_args() + [null, null];
+		if ($parent !== null) {
 			$parent->addComponent($this, $name);
 
 		} elseif (is_string($name)) {
@@ -46,38 +46,38 @@ abstract class Component implements IComponent
 
 	/**
 	 * Lookup hierarchy for component specified by class or interface name.
-	 * @param  string|NULL
+	 * @param  string|null
 	 * @param  bool
-	 * @return IComponent|NULL
+	 * @return IComponent|null
 	 */
-	public function lookup($type, $throw = TRUE)
+	public function lookup($type, $throw = true)
 	{
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
 			$path = self::NAME_SEPARATOR . $this->name;
 			$depth = 1;
-			while ($obj !== NULL) {
+			while ($obj !== null) {
 				$parent = $obj->getParent();
-				if ($type ? $obj instanceof $type : $parent === NULL) {
+				if ($type ? $obj instanceof $type : $parent === null) {
 					break;
 				}
 				$path = self::NAME_SEPARATOR . $obj->getName() . $path;
 				$depth++;
 				$obj = $parent; // IComponent::getParent()
 				if ($obj === $this) {
-					$obj = NULL; // prevent cycling
+					$obj = null; // prevent cycling
 				}
 			}
 
 			if ($obj) {
-				$this->monitors[$type] = [$obj, $depth, substr($path, 1), FALSE];
+				$this->monitors[$type] = [$obj, $depth, substr($path, 1), false];
 
 			} else {
-				$this->monitors[$type] = [NULL, NULL, NULL, FALSE]; // not found
+				$this->monitors[$type] = [null, null, null, false]; // not found
 			}
 		}
 
-		if ($throw && $this->monitors[$type][0] === NULL) {
+		if ($throw && $this->monitors[$type][0] === null) {
 			throw new Nette\InvalidStateException("Component '$this->name' is not attached to '$type'.");
 		}
 
@@ -88,11 +88,11 @@ abstract class Component implements IComponent
 	/**
 	 * Lookup for component specified by class or interface name. Returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
-	 * @param  string|NULL
+	 * @param  string|null
 	 * @param  bool
-	 * @return string|NULL
+	 * @return string|null
 	 */
-	public function lookupPath($type = NULL, $throw = TRUE)
+	public function lookupPath($type = null, $throw = true)
 	{
 		$this->lookup($type, $throw);
 		return $this->monitors[$type][2];
@@ -107,10 +107,10 @@ abstract class Component implements IComponent
 	public function monitor($type)
 	{
 		if (empty($this->monitors[$type][3])) {
-			if ($obj = $this->lookup($type, FALSE)) {
+			if ($obj = $this->lookup($type, false)) {
 				$this->attached($obj);
 			}
-			$this->monitors[$type][3] = TRUE; // mark as monitored
+			$this->monitors[$type][3] = true; // mark as monitored
 		}
 	}
 
@@ -152,7 +152,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * @return string|NULL
+	 * @return string|null
 	 */
 	public function getName()
 	{
@@ -162,7 +162,7 @@ abstract class Component implements IComponent
 
 	/**
 	 * Returns the container if any.
-	 * @return IContainer|NULL
+	 * @return IContainer|null
 	 */
 	public function getParent()
 	{
@@ -179,30 +179,30 @@ abstract class Component implements IComponent
 	 * @throws Nette\InvalidStateException
 	 * @internal
 	 */
-	public function setParent(IContainer $parent = NULL, $name = NULL)
+	public function setParent(IContainer $parent = null, $name = null)
 	{
-		if ($parent === NULL && $this->parent === NULL && $name !== NULL) {
+		if ($parent === null && $this->parent === null && $name !== null) {
 			$this->name = $name; // just rename
 			return $this;
 
-		} elseif ($parent === $this->parent && $name === NULL) {
+		} elseif ($parent === $this->parent && $name === null) {
 			return $this; // nothing to do
 		}
 
 		// A component cannot be given a parent if it already has a parent.
-		if ($this->parent !== NULL && $parent !== NULL) {
+		if ($this->parent !== null && $parent !== null) {
 			throw new Nette\InvalidStateException("Component '$this->name' already has a parent.");
 		}
 
 		// remove from parent?
-		if ($parent === NULL) {
+		if ($parent === null) {
 			$this->refreshMonitors(0);
-			$this->parent = NULL;
+			$this->parent = null;
 
 		} else { // add to parent
 			$this->validateParent($parent);
 			$this->parent = $parent;
-			if ($name !== NULL) {
+			if ($name !== null) {
 				$this->name = $name;
 			}
 
@@ -227,11 +227,11 @@ abstract class Component implements IComponent
 	/**
 	 * Refreshes monitors.
 	 * @param  int
-	 * @param  array|NULL (array = attaching, NULL = detaching)
+	 * @param  array|null (array = attaching, null = detaching)
 	 * @param  array
 	 * @return void
 	 */
-	private function refreshMonitors($depth, &$missing = NULL, &$listeners = [])
+	private function refreshMonitors($depth, &$missing = null, &$listeners = [])
 	{
 		if ($this instanceof IContainer) {
 			foreach ($this->getComponents() as $component) {
@@ -241,11 +241,11 @@ abstract class Component implements IComponent
 			}
 		}
 
-		if ($missing === NULL) { // detaching
+		if ($missing === null) { // detaching
 			foreach ($this->monitors as $type => $rec) {
 				if (isset($rec[1]) && $rec[1] > $depth) {
 					if ($rec[3]) { // monitored
-						$this->monitors[$type] = [NULL, NULL, NULL, TRUE];
+						$this->monitors[$type] = [null, null, null, true];
 						$listeners[] = [$this, $rec[0]];
 					} else { // not monitored, just randomly cached
 						unset($this->monitors[$type]);
@@ -262,25 +262,25 @@ abstract class Component implements IComponent
 					unset($this->monitors[$type]);
 
 				} elseif (isset($missing[$type])) { // known from previous lookup
-					$this->monitors[$type] = [NULL, NULL, NULL, TRUE];
+					$this->monitors[$type] = [null, null, null, true];
 
 				} else {
-					$this->monitors[$type] = NULL; // forces re-lookup
-					if ($obj = $this->lookup($type, FALSE)) {
+					$this->monitors[$type] = null; // forces re-lookup
+					if ($obj = $this->lookup($type, false)) {
 						$listeners[] = [$this, $obj];
 					} else {
-						$missing[$type] = TRUE;
+						$missing[$type] = true;
 					}
-					$this->monitors[$type][3] = TRUE; // mark as monitored
+					$this->monitors[$type][3] = true; // mark as monitored
 				}
 			}
 		}
 
 		if ($depth === 0) { // call listeners
-			$method = $missing === NULL ? 'detached' : 'attached';
+			$method = $missing === null ? 'detached' : 'attached';
 			$prev = [];
 			foreach ($listeners as $item) {
-				if (!in_array($item, $prev, TRUE)) {
+				if (!in_array($item, $prev, true)) {
 					$item[0]->$method($item[1]);
 					$prev[] = $item;
 				}
@@ -297,17 +297,17 @@ abstract class Component implements IComponent
 	 */
 	public function __clone()
 	{
-		if ($this->parent === NULL) {
+		if ($this->parent === null) {
 			return;
 
 		} elseif ($this->parent instanceof Container) {
 			$this->parent = $this->parent->_isCloning();
-			if ($this->parent === NULL) { // not cloning
+			if ($this->parent === null) { // not cloning
 				$this->refreshMonitors(0);
 			}
 
 		} else {
-			$this->parent = NULL;
+			$this->parent = null;
 			$this->refreshMonitors(0);
 		}
 	}

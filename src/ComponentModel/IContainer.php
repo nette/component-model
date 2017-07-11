@@ -32,7 +32,7 @@ interface IContainer extends IComponent
 	/**
 	 * Returns single component.
 	 * @param  string|int
-	 * @return IComponent|NULL
+	 * @return IComponent|null
 	 */
 	function getComponent($name);
 
@@ -42,5 +42,5 @@ interface IContainer extends IComponent
 	 * @param  string
 	 * @return \Iterator
 	 */
-	function getComponents($deep = FALSE, $filterType = NULL);
+	function getComponents($deep = false, $filterType = null);
 }

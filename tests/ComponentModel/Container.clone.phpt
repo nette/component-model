@@ -34,19 +34,19 @@ class TestClass extends Container implements ArrayAccess
 
 	function offsetGet($name)
 	{
-		return $this->getComponent($name, TRUE);
+		return $this->getComponent($name, true);
 	}
 
 
 	function offsetExists($name)
 	{
-		return $this->getComponent($name) !== NULL;
+		return $this->getComponent($name) !== null;
 	}
 
 
 	function offsetUnset($name)
 	{
-		$this->removeComponent($this->getComponent($name, TRUE));
+		$this->removeComponent($this->getComponent($name, true));
 	}
 }
 
@@ -94,7 +94,7 @@ Assert::same([
 	'C::ATTACHED(A)',
 ], Notes::fetch());
 
-Assert::same('b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', FALSE));
+Assert::same('b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', false));
 
 
 // ==> clone 'c'
@@ -104,9 +104,9 @@ Assert::same([
 	'C::detached(A)',
 ], Notes::fetch());
 
-Assert::null($dolly['d']['e']->lookupPath('A', FALSE));
+Assert::null($dolly['d']['e']->lookupPath('A', false));
 
-Assert::same('d-e', $dolly['d']['e']->lookupPath('C', FALSE));
+Assert::same('d-e', $dolly['d']['e']->lookupPath('C', false));
 
 
 // ==> clone 'b'
@@ -127,7 +127,7 @@ Assert::same([
 ], Notes::fetch());
 
 Assert::same([
-	'(A)' => NULL,
+	'(A)' => null,
 	'children' => [
 		'b' => [
 			'(B)' => 'b',
