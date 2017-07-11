@@ -16,12 +16,10 @@ require __DIR__ . '/../bootstrap.php';
 
 class TestClass extends Container
 {
-
 	public function createComponent(string $name): ?IComponent
 	{
 		return $this->getComponent('a');
 	}
-
 }
 
 

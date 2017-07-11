@@ -22,25 +22,30 @@ class TestClass extends Container implements ArrayAccess
 		Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
+
 	function detached(IComponent $obj): void
 	{
 		Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
+
 
 	function offsetSet($name, $component)
 	{
 		$this->addComponent($component, $name);
 	}
 
+
 	function offsetGet($name)
 	{
 		return $this->getComponent($name, TRUE);
 	}
 
+
 	function offsetExists($name)
 	{
 		return $this->getComponent($name) !== NULL;
 	}
+
 
 	function offsetUnset($name)
 	{
@@ -49,7 +54,8 @@ class TestClass extends Container implements ArrayAccess
 }
 
 
-function export($obj) {
+function export($obj)
+{
 	$res = ['(' . get_class($obj) . ')' => $obj->getName()];
 	if ($obj instanceof IContainer) {
 		foreach ($obj->getComponents() as $name => $child) {
@@ -60,11 +66,21 @@ function export($obj) {
 };
 
 
-class A extends TestClass {}
-class B extends TestClass {}
-class C extends TestClass {}
-class D extends TestClass {}
-class E extends TestClass {}
+class A extends TestClass
+{
+}
+class B extends TestClass
+{
+}
+class C extends TestClass
+{
+}
+class D extends TestClass
+{
+}
+class E extends TestClass
+{
+}
 
 $a = new A;
 $a['b'] = new B;

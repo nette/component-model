@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 // The Nette Tester command-line runner can be
@@ -19,10 +18,12 @@ class Notes
 {
 	public static $notes = [];
 
+
 	public static function add($message)
 	{
 		self::$notes[] = $message;
 	}
+
 
 	public static function fetch()
 	{
@@ -30,5 +31,4 @@ class Notes
 		self::$notes = [];
 		return $res;
 	}
-
 }

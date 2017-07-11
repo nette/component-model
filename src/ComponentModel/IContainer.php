@@ -38,5 +38,4 @@ interface IContainer extends IComponent
 	 * Iterates over a components.
 	 */
 	function getComponents(bool $deep = FALSE, string $filterType = NULL): \Iterator;
-
 }

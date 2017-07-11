@@ -21,25 +21,30 @@ class TestClass extends Container implements ArrayAccess
 		Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
+
 	function detached(IComponent $obj): void
 	{
 		Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
+
 
 	function offsetSet($name, $component)
 	{
 		$this->addComponent($component, $name);
 	}
 
+
 	function offsetGet($name)
 	{
 		return $this->getComponent($name, TRUE);
 	}
 
+
 	function offsetExists($name)
 	{
 		return $this->getComponent($name) !== NULL;
 	}
+
 
 	function offsetUnset($name)
 	{
@@ -48,11 +53,21 @@ class TestClass extends Container implements ArrayAccess
 }
 
 
-class A extends TestClass {}
-class B extends TestClass {}
-class C extends TestClass {}
-class D extends TestClass {}
-class E extends TestClass {}
+class A extends TestClass
+{
+}
+class B extends TestClass
+{
+}
+class C extends TestClass
+{
+}
+class D extends TestClass
+{
+}
+class E extends TestClass
+{
+}
 
 $d = new D;
 $d['e'] = new E;
@@ -94,30 +109,25 @@ Notes::fetch(); // clear
 
 class FooForm extends TestClass
 {
-
 	protected function validateParent(\Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
 		$this->monitor(__CLASS__);
 	}
-
 }
 
 class FooControl extends TestClass
 {
-
 	protected function validateParent(\Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
 		$this->monitor('FooPresenter');
 		$this->monitor('TestClass'); // double
 	}
-
 }
 
 class FooPresenter extends TestClass
 {
-
 }
 
 $presenter = new FooPresenter();

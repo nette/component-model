@@ -15,13 +15,11 @@ require __DIR__ . '/../bootstrap.php';
 
 class TestClass extends Container
 {
-
 	public function createComponentB($name)
 	{
 		$this->addComponent($component = new self, $name);
 		return $component;
 	}
-
 }
 
 
