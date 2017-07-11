@@ -85,15 +85,15 @@ Monitoring and lookup of components or paths using `lookup` is **very precisely 
 Iterating over children
 -----------------------
 
-There is a method `getComponents($deep = FALSE, $type = NULL)` for that. First parameter determines if the components should be looked up in depth (recursively). With `TRUE`, it not only iterates all it's children, but also all chilren of it's children, etc. Second parameter servers as an optional filter by class or interface.
+There is a method `getComponents($deep = false, $type = null)` for that. First parameter determines if the components should be looked up in depth (recursively). With `true`, it not only iterates all it's children, but also all chilren of it's children, etc. Second parameter servers as an optional filter by class or interface.
 
 For example, this is the way how validation of forms is "internally"((this is done by framework itself, you don't have to call it explicitly)) performed:
 
 ```php
-$valid = TRUE;
-foreach ($form->getComponents(TRUE, Nette\Forms\IControl::class) as $control) {
+$valid = true;
+foreach ($form->getComponents(true, Nette\Forms\IControl::class) as $control) {
     if (!$control->getRules()->validate()) {
-        $valid = FALSE;
+        $valid = false;
         break;
     }
 }

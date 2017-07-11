@@ -22,7 +22,7 @@ class ComponentX extends Component
 {
 }
 
-$c = new Container(NULL, 'top');
+$c = new Container(null, 'top');
 
 $c->addComponent(new Container, 'one');
 $c->addComponent(new ComponentX, 'two');
@@ -43,7 +43,7 @@ Assert::same([
 
 
 // Filter
-$list = $c->getComponents(FALSE, 'Button');
+$list = $c->getComponents(false, 'Button');
 Assert::same([
 	'button1',
 ], array_keys(iterator_to_array($list)));
@@ -62,7 +62,7 @@ Assert::same([
 
 
 // Recursive
-$list = $c->getComponents(TRUE);
+$list = $c->getComponents(true);
 Assert::same([
 	'one',
 	'inner',
@@ -74,7 +74,7 @@ Assert::same([
 
 
 // Recursive & filter I
-$list = $c->getComponents(TRUE, 'Button');
+$list = $c->getComponents(true, 'Button');
 Assert::same([
 	'button2',
 	'button1',
@@ -82,7 +82,7 @@ Assert::same([
 
 
 // Recursive & filter II
-$list = $c->getComponents(TRUE, Nette\ComponentModel\Container::class);
+$list = $c->getComponents(true, Nette\ComponentModel\Container::class);
 Assert::same([
 	'one',
 	'inner2',

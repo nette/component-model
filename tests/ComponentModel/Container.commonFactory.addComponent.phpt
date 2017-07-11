@@ -19,7 +19,7 @@ class TestClass extends Container
 	public function createComponent(string $name): ?IComponent
 	{
 		$this->addComponent(new self, $name);
-		return NULL;
+		return null;
 	}
 }
 

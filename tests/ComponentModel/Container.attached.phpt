@@ -36,19 +36,19 @@ class TestClass extends Container implements ArrayAccess
 
 	function offsetGet($name)
 	{
-		return $this->getComponent($name, TRUE);
+		return $this->getComponent($name, true);
 	}
 
 
 	function offsetExists($name)
 	{
-		return $this->getComponent($name) !== NULL;
+		return $this->getComponent($name) !== null;
 	}
 
 
 	function offsetUnset($name)
 	{
-		$this->removeComponent($this->getComponent($name, TRUE));
+		$this->removeComponent($this->getComponent($name, true));
 	}
 }
 
@@ -99,7 +99,7 @@ $a['b'] = $b;
 Assert::same('b-c-d-e', $d['e']->lookupPath('A'));
 Assert::same($a, $d['e']->lookup('A'));
 Assert::same('b-c-d-e', $d['e']->lookupPath());
-Assert::same($a, $d['e']->lookup(NULL));
+Assert::same($a, $d['e']->lookup(null));
 Assert::same('c-d-e', $d['e']->lookupPath('B'));
 Assert::same($b, $d['e']->lookup('B'));
 
