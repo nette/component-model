@@ -329,5 +329,4 @@ abstract class Component implements IComponent
 	{
 		throw new Nette\NotImplementedException('Object unserialization is not supported by class ' . get_class($this));
 	}
-
 }

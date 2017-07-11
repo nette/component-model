@@ -34,5 +34,4 @@ interface IComponent
 	 * @return static
 	 */
 	function setParent(IContainer $parent = NULL, $name = NULL);
-
 }

@@ -43,5 +43,4 @@ class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Cou
 	{
 		return iterator_count($this);
 	}
-
 }

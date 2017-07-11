@@ -43,5 +43,4 @@ interface IContainer extends IComponent
 	 * @return \Iterator
 	 */
 	function getComponents($deep = FALSE, $filterType = NULL);
-
 }

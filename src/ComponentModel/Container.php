@@ -253,5 +253,4 @@ class Container extends Component implements IContainer
 	{
 		return $this->cloning;
 	}
-
 }

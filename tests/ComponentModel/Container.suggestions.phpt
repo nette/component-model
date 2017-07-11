@@ -13,23 +13,24 @@ require __DIR__ . '/../bootstrap.php';
 
 class TestContainer extends Container
 {
-
 	public function createComponentPublic()
 	{
 	}
+
 
 	public static function createComponentPublicStatic()
 	{
 	}
 
+
 	protected function createComponentProtected()
 	{
 	}
 
+
 	private function createComponentPrivate()
 	{
 	}
-
 }
 
 
