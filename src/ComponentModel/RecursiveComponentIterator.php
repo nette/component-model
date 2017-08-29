@@ -14,7 +14,7 @@ namespace Nette\ComponentModel;
  * Recursive component iterator. See Container::getComponents().
  * @internal
  */
-class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Countable
+final class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Countable
 {
 
 	/**

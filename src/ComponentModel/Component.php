@@ -51,7 +51,7 @@ abstract class Component implements IComponent
 	 * Lookup hierarchy for component specified by class or interface name.
 	 * @param  bool $throw   throw exception if component doesn't exist?
 	 */
-	public function lookup(?string $type, bool $throw = true): ?IComponent
+	final public function lookup(?string $type, bool $throw = true): ?IComponent
 	{
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
@@ -90,7 +90,7 @@ abstract class Component implements IComponent
 	 * Lookup for component specified by class or interface name. Returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
 	 */
-	public function lookupPath(string $type = null, bool $throw = true): ?string
+	final public function lookupPath(string $type = null, bool $throw = true): ?string
 	{
 		$this->lookup($type, $throw);
 		return $this->monitors[$type][2];
@@ -100,7 +100,7 @@ abstract class Component implements IComponent
 	/**
 	 * Starts monitoring.
 	 */
-	public function monitor(string $type): void
+	final public function monitor(string $type): void
 	{
 		if (empty($this->monitors[$type][3])) {
 			if ($obj = $this->lookup($type, false)) {
@@ -114,7 +114,7 @@ abstract class Component implements IComponent
 	/**
 	 * Stops monitoring.
 	 */
-	public function unmonitor(string $type): void
+	final public function unmonitor(string $type): void
 	{
 		unset($this->monitors[$type]);
 	}
@@ -141,7 +141,7 @@ abstract class Component implements IComponent
 	/********************* interface IComponent ****************d*g**/
 
 
-	public function getName(): ?string
+	final public function getName(): ?string
 	{
 		return $this->name;
 	}
@@ -150,7 +150,7 @@ abstract class Component implements IComponent
 	/**
 	 * Returns the container if any.
 	 */
-	public function getParent(): ?IContainer
+	final public function getParent(): ?IContainer
 	{
 		return $this->parent;
 	}
@@ -296,7 +296,7 @@ abstract class Component implements IComponent
 	/**
 	 * Prevents serialization.
 	 */
-	public function __sleep()
+	final public function __sleep()
 	{
 		throw new Nette\NotImplementedException('Object serialization is not supported by class ' . get_class($this));
 	}
@@ -305,7 +305,7 @@ abstract class Component implements IComponent
 	/**
 	 * Prevents unserialization.
 	 */
-	public function __wakeup()
+	final public function __wakeup()
 	{
 		throw new Nette\NotImplementedException('Object unserialization is not supported by class ' . get_class($this));
 	}

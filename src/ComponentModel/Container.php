@@ -111,7 +111,7 @@ class Container extends Component implements IContainer
 	 * @param  string|int
 	 * @param  bool   throw exception if component doesn't exist?
 	 */
-	public function getComponent($name, bool $throw = true): ?IComponent
+	final public function getComponent($name, bool $throw = true): ?IComponent
 	{
 		if (isset($this->components[$name])) {
 			return $this->components[$name];
@@ -194,7 +194,7 @@ class Container extends Component implements IContainer
 	/**
 	 * Iterates over components.
 	 */
-	public function getComponents(bool $deep = false, string $filterType = null): \Iterator
+	final public function getComponents(bool $deep = false, string $filterType = null): \Iterator
 	{
 		$iterator = new RecursiveComponentIterator($this->components);
 		if ($deep) {
@@ -242,7 +242,7 @@ class Container extends Component implements IContainer
 	 * Is container cloning now?
 	 * @internal
 	 */
-	public function _isCloning(): ?IComponent
+	final public function _isCloning(): ?IComponent
 	{
 		return $this->cloning;
 	}
