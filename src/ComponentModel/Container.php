@@ -36,7 +36,7 @@ class Container extends Component implements IContainer
 	 * @return static
 	 * @throws Nette\InvalidStateException
 	 */
-	public function addComponent(IComponent $component, $name, $insertBefore = null)
+	public function addComponent(IComponent $component, $name, ?string $insertBefore = null)
 	{
 		if ($name === null) {
 			$name = $component->getName();
