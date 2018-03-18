@@ -67,21 +67,21 @@ class Container extends Component implements IContainer
 		// user checking
 		$this->validateChildComponent($component);
 
-		try {
-			if (isset($this->components[$insertBefore])) {
-				$tmp = [];
-				foreach ($this->components as $k => $v) {
-					if ($k === $insertBefore) {
-						$tmp[$name] = $component;
-					}
-					$tmp[$k] = $v;
+		if (isset($this->components[$insertBefore])) {
+			$tmp = [];
+			foreach ($this->components as $k => $v) {
+				if ($k === $insertBefore) {
+					$tmp[$name] = $component;
 				}
-				$this->components = $tmp;
-			} else {
-				$this->components[$name] = $component;
+				$tmp[$k] = $v;
 			}
-			$component->setParent($this, $name);
+			$this->components = $tmp;
+		} else {
+			$this->components[$name] = $component;
+		}
 
+		try {
+			$component->setParent($this, $name);
 		} catch (\Exception $e) {
 			unset($this->components[$name]); // undo
 			throw $e;
@@ -114,32 +114,20 @@ class Container extends Component implements IContainer
 	 */
 	public function getComponent($name, $throw = true)
 	{
-		if (isset($this->components[$name])) {
-			return $this->components[$name];
+		if (!is_int($name) && !is_string($name)) {
+			throw new Nette\InvalidArgumentException(sprintf('Component name must be integer or string, %s given.', gettype($name)));
 		}
 
-		if (is_int($name)) {
-			$name = (string) $name;
+		list($name) = $parts = explode(self::NAME_SEPARATOR, (string) $name, 2);
 
-		} elseif (!is_string($name)) {
-			throw new Nette\InvalidArgumentException(sprintf('Component name must be integer or string, %s given.', gettype($name)));
-
-		} else {
-			$a = strpos($name, self::NAME_SEPARATOR);
-			if ($a !== false) {
-				$ext = (string) substr($name, $a + 1);
-				$name = substr($name, 0, $a);
-			}
-
-			if ($name === '') {
+		if (!isset($this->components[$name])) {
+			if (!preg_match('#^[a-zA-Z0-9_]+\z#', $name)) {
 				if ($throw) {
-					throw new Nette\InvalidArgumentException('Component or subcomponent name must not be empty string.');
+					throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
 				}
 				return;
 			}
-		}
 
-		if (!isset($this->components[$name])) {
 			$component = $this->createComponent($name);
 			if ($component) {
 				if (!$component instanceof IComponent) {
@@ -151,15 +139,16 @@ class Container extends Component implements IContainer
 			}
 		}
 
-		if (isset($this->components[$name])) {
-			if (!isset($ext)) {
-				return $this->components[$name];
+		$component = isset($this->components[$name]) ? $this->components[$name] : null;
+		if ($component !== null) {
+			if (!isset($parts[1])) {
+				return $component;
 
-			} elseif ($this->components[$name] instanceof IContainer) {
-				return $this->components[$name]->getComponent($ext, $throw);
+			} elseif ($component instanceof IContainer) {
+				return $component->getComponent($parts[1], $throw);
 
 			} elseif ($throw) {
-				throw new Nette\InvalidArgumentException("Component with name '$name' is not container and cannot have '$ext' component.");
+				throw new Nette\InvalidArgumentException("Component with name '$name' is not container and cannot have '$parts[1]' component.");
 			}
 
 		} elseif ($throw) {
