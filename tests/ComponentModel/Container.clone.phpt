@@ -17,6 +17,8 @@ require __DIR__ . '/../bootstrap.php';
 
 class TestClass extends Container implements ArrayAccess
 {
+	use Nette\ComponentModel\ArrayAccess;
+
 	public function attached(IComponent $obj): void
 	{
 		Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
@@ -26,30 +28,6 @@ class TestClass extends Container implements ArrayAccess
 	public function detached(IComponent $obj): void
 	{
 		Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
-	}
-
-
-	public function offsetSet($name, $component)
-	{
-		$this->addComponent($component, $name);
-	}
-
-
-	public function offsetGet($name)
-	{
-		return $this->getComponent($name, true);
-	}
-
-
-	public function offsetExists($name)
-	{
-		return $this->getComponent($name) !== null;
-	}
-
-
-	public function offsetUnset($name)
-	{
-		$this->removeComponent($this->getComponent($name, true));
 	}
 }
 
