@@ -14,5 +14,5 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $container = new Container;
-$container->addComponent(new Container, 0);
-Assert::same('0', $container->getComponent(0)->getName());
+$container->addComponent(new Container, '0');
+Assert::same('0', $container->getComponent('0')->getName());

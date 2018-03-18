@@ -31,24 +31,16 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Adds the component to the container.
-	 * @param  string|int $name
-	 * @param  string|int $insertBefore
 	 * @return static
 	 * @throws Nette\InvalidStateException
 	 */
-	public function addComponent(IComponent $component, $name, $insertBefore = null)
+	public function addComponent(IComponent $component, ?string $name, string $insertBefore = null)
 	{
 		if ($name === null) {
 			$name = $component->getName();
 		}
 
-		if (is_int($name)) {
-			$name = (string) $name;
-
-		} elseif (!is_string($name)) {
-			throw new Nette\InvalidArgumentException(sprintf('Component name must be integer or string, %s given.', gettype($name)));
-
-		} elseif (!preg_match('#^[a-zA-Z0-9_]+\z#', $name)) {
+		if (!preg_match('#^[a-zA-Z0-9_]+\z#', $name)) {
 			throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
 		}
 
@@ -108,16 +100,11 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Returns component specified by name or path.
-	 * @param  string|int
-	 * @param  bool   throw exception if component doesn't exist?
+	 * @param  bool  $throw  throw exception if component doesn't exist?
 	 */
-	final public function getComponent($name, bool $throw = true): ?IComponent
+	final public function getComponent(string $name, bool $throw = true): ?IComponent
 	{
-		if (!is_int($name) && !is_string($name)) {
-			throw new Nette\InvalidArgumentException(sprintf('Component name must be integer or string, %s given.', gettype($name)));
-		}
-
-		[$name] = $parts = explode(self::NAME_SEPARATOR, (string) $name, 2);
+		[$name] = $parts = explode(self::NAME_SEPARATOR, $name, 2);
 
 		if (!isset($this->components[$name])) {
 			if (!preg_match('#^[a-zA-Z0-9_]+\z#', $name)) {
