@@ -28,7 +28,7 @@ abstract class Component implements IComponent
 	/** @var string */
 	private $name;
 
-	/** @var array of [type => [obj, depth, path, is_monitored?]] */
+	/** @var array of [type => [obj, depth, path, array of [attached, detached]]] */
 	private $monitors = [];
 
 
@@ -72,10 +72,10 @@ abstract class Component implements IComponent
 			}
 
 			if ($obj) {
-				$this->monitors[$type] = [$obj, $depth, substr($path, 1), false];
+				$this->monitors[$type] = [$obj, $depth, substr($path, 1), []];
 
 			} else {
-				$this->monitors[$type] = [null, null, null, false]; // not found
+				$this->monitors[$type] = [null, null, null, []]; // not found
 			}
 		}
 
@@ -106,14 +106,16 @@ abstract class Component implements IComponent
 	 * @param  string
 	 * @return void
 	 */
-	public function monitor($type)
+	final public function monitor($type, callable $attached = null, callable $detached = null)
 	{
-		if (empty($this->monitors[$type][3])) {
-			if ($obj = $this->lookup($type, false)) {
-				$this->attached($obj);
-			}
-			$this->monitors[$type][3] = true; // mark as monitored
+		if (func_num_args() === 1) {
+			$attached = [$this, 'attached'];
+			$detached = [$this, 'detached'];
 		}
+		if (($obj = $this->lookup($type, false)) && $attached && !in_array([$attached, $detached], $this->monitors[$type][3], true)) {
+			$attached($obj);
+		}
+		$this->monitors[$type][3][] = [$attached, $detached]; // mark as monitored
 	}
 
 
@@ -247,8 +249,10 @@ abstract class Component implements IComponent
 			foreach ($this->monitors as $type => $rec) {
 				if (isset($rec[1]) && $rec[1] > $depth) {
 					if ($rec[3]) { // monitored
-						$this->monitors[$type] = [null, null, null, true];
-						$listeners[] = [$this, $rec[0]];
+						$this->monitors[$type] = [null, null, null, $rec[3]];
+						foreach ($rec[3] as $pair) {
+							$listeners[] = [$pair[1], $rec[0]];
+						}
 					} else { // not monitored, just randomly cached
 						unset($this->monitors[$type]);
 					}
@@ -264,26 +268,27 @@ abstract class Component implements IComponent
 					unset($this->monitors[$type]);
 
 				} elseif (isset($missing[$type])) { // known from previous lookup
-					$this->monitors[$type] = [null, null, null, true];
+					$this->monitors[$type] = [null, null, null, $rec[3]];
 
 				} else {
 					$this->monitors[$type] = null; // forces re-lookup
 					if ($obj = $this->lookup($type, false)) {
-						$listeners[] = [$this, $obj];
+						foreach ($rec[3] as $pair) {
+							$listeners[] = [$pair[0], $obj];
+						}
 					} else {
 						$missing[$type] = true;
 					}
-					$this->monitors[$type][3] = true; // mark as monitored
+					$this->monitors[$type][3] = $rec[3]; // mark as monitored
 				}
 			}
 		}
 
 		if ($depth === 0) { // call listeners
-			$method = $missing === null ? 'detached' : 'attached';
 			$prev = [];
 			foreach ($listeners as $item) {
-				if (!in_array($item, $prev, true)) {
-					$item[0]->$method($item[1]);
+				if ($item[0] && !in_array($item, $prev, true)) {
+					call_user_func($item[0], $item[1]);
 					$prev[] = $item;
 				}
 			}
