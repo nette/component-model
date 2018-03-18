@@ -135,6 +135,7 @@ abstract class Component implements IComponent
 	 * becomes attached to a monitored object. Do not call this method yourself.
 	 * @param  IComponent
 	 * @return void
+	 * @deprecated  use monitor($type, $attached)
 	 */
 	protected function attached($obj)
 	{
@@ -146,6 +147,7 @@ abstract class Component implements IComponent
 	 * becomes detached from a monitored object. Do not call this method yourself.
 	 * @param  IComponent
 	 * @return void
+	 * @deprecated  use monitor($type, null, $detached)
 	 */
 	protected function detached($obj)
 	{
