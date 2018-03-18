@@ -36,14 +36,6 @@ abstract class Component implements IComponent
 
 	public function __construct()
 	{
-		[$parent, $name] = func_get_args() + [null, null];
-		if ($parent !== null) {
-			trigger_error(__METHOD__ . '() argument $parent is deprecated, use $parent->addComponent() instead.', E_USER_DEPRECATED);
-			$parent->addComponent($this, $name);
-
-		} elseif (is_string($name)) {
-			$this->name = $name;
-		}
 	}
 
 
