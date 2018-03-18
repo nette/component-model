@@ -117,6 +117,7 @@ abstract class Component implements IComponent
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
+	 * @deprecated  use monitor($type, $attached)
 	 */
 	protected function attached(IComponent $obj): void
 	{
@@ -126,6 +127,7 @@ abstract class Component implements IComponent
 	/**
 	 * This method will be called before the component (or component's parent)
 	 * becomes detached from a monitored object. Do not call this method yourself.
+	 * @deprecated  use monitor($type, null, $detached)
 	 */
 	protected function detached(IComponent $obj): void
 	{
