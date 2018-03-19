@@ -47,7 +47,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Lookup hierarchy for component specified by class or interface name.
+	 * Finds the closest ancestor specified by class or interface name.
 	 * @param  string|null
 	 * @param  bool
 	 * @return IComponent|null
@@ -88,7 +88,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Lookup for component specified by class or interface name. Returns backtrace path.
+	 * Finds the closest ancestor specified by class or interface name and returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
 	 * @param  string|null
 	 * @param  bool
@@ -102,7 +102,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Starts monitoring.
+	 * Starts monitoring of ancestors.
 	 * @param  string
 	 * @return void
 	 */
@@ -118,7 +118,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Stops monitoring.
+	 * Stops monitoring of ancestors.
 	 * @param  string
 	 * @return void
 	 */
@@ -163,7 +163,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Returns the container if any.
+	 * Returns the parent container if any.
 	 * @return IContainer|null
 	 */
 	public function getParent()

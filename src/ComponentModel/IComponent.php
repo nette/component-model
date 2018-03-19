@@ -22,7 +22,7 @@ interface IComponent
 	function getName();
 
 	/**
-	 * Returns the container if any.
+	 * Returns the parent container if any.
 	 * @return IContainer|null
 	 */
 	function getParent();

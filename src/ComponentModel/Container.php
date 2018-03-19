@@ -28,7 +28,7 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Adds the specified component to the IContainer.
+	 * Adds the component to the container.
 	 * @param  IComponent
 	 * @param  string|int
 	 * @param  string|int
@@ -91,7 +91,7 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Removes a component from the IContainer.
+	 * Removes the component from the container.
 	 * @return void
 	 */
 	public function removeComponent(IComponent $component)
@@ -193,7 +193,7 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Iterates over components.
+	 * Iterates over descendants components.
 	 * @param  bool
 	 * @param  string
 	 * @return \Iterator
