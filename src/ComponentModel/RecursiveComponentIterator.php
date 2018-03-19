@@ -16,7 +16,6 @@ namespace Nette\ComponentModel;
  */
 final class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Countable
 {
-
 	/**
 	 * Has the current element has children?
 	 */

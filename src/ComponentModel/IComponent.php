@@ -21,7 +21,7 @@ interface IComponent
 	function getName(): ?string;
 
 	/**
-	 * Returns the container if any.
+	 * Returns the parent container if any.
 	 */
 	function getParent(): ?IContainer;
 

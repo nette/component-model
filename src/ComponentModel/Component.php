@@ -40,7 +40,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Lookup hierarchy for component specified by class or interface name.
+	 * Finds the closest ancestor specified by class or interface name.
 	 * @param  bool $throw   throw exception if component doesn't exist?
 	 */
 	final public function lookup(?string $type, bool $throw = true): ?IComponent
@@ -79,7 +79,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Lookup for component specified by class or interface name. Returns backtrace path.
+	 * Finds the closest ancestor specified by class or interface name and returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
 	 */
 	final public function lookupPath(string $type = null, bool $throw = true): ?string
@@ -90,7 +90,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Starts monitoring.
+	 * Starts monitoring of ancestors.
 	 */
 	final public function monitor(string $type): void
 	{
@@ -104,7 +104,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Stops monitoring.
+	 * Stops monitoring of ancestors.
 	 */
 	final public function unmonitor(string $type): void
 	{
@@ -140,7 +140,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Returns the container if any.
+	 * Returns the parent container if any.
 	 */
 	final public function getParent(): ?IContainer
 	{

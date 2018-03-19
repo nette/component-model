@@ -30,7 +30,7 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Adds the specified component to the IContainer.
+	 * Adds the component to the container.
 	 * @param  string|int $name
 	 * @param  string|int $insertBefore
 	 * @return static
@@ -92,7 +92,7 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Removes a component from the IContainer.
+	 * Removes the component from the container.
 	 */
 	public function removeComponent(IComponent $component): void
 	{
@@ -192,7 +192,7 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Iterates over components.
+	 * Iterates over descendants components.
 	 */
 	final public function getComponents(bool $deep = false, string $filterType = null): \Iterator
 	{
