@@ -133,7 +133,7 @@ class Container extends Component implements IContainer
 			}
 
 		} elseif ($throw) {
-			$hint = Nette\Utils\ObjectMixin::getSuggestion(array_merge(
+			$hint = Nette\Utils\ObjectHelpers::getSuggestion(array_merge(
 				array_keys($this->components),
 				array_map('lcfirst', preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this)))
 			), $name);
