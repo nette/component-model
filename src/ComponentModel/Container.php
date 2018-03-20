@@ -20,7 +20,7 @@ class Container extends Component implements IContainer
 	/** @var IComponent[] */
 	private $components = [];
 
-	/** @var IComponent|null */
+	/** @var Container|null */
 	private $cloning;
 
 
@@ -29,7 +29,7 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Adds the component to the container.
-	 * @param  string|int  $name
+	 * @param  string|int|null  $name
 	 * @param  string|int  $insertBefore
 	 * @return static
 	 * @throws Nette\InvalidStateException
@@ -234,7 +234,7 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Is container cloning now?
-	 * @return IComponent|null
+	 * @return Container|null
 	 * @internal
 	 */
 	public function _isCloning()
