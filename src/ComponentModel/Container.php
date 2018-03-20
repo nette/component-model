@@ -22,7 +22,7 @@ class Container extends Component implements IContainer
 	/** @var IComponent[] */
 	private $components = [];
 
-	/** @var IComponent|null */
+	/** @var Container|null */
 	private $cloning;
 
 
@@ -213,7 +213,7 @@ class Container extends Component implements IContainer
 	 * Is container cloning now?
 	 * @internal
 	 */
-	final public function _isCloning(): ?IComponent
+	final public function _isCloning(): ?Container
 	{
 		return $this->cloning;
 	}
