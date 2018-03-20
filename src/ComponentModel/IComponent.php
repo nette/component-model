@@ -29,8 +29,7 @@ interface IComponent
 
 	/**
 	 * Sets the parent of this component.
-	 * @param  IContainer
-	 * @param  string
+	 * @param  string  $name
 	 * @return static
 	 */
 	function setParent(IContainer $parent = null, $name = null);

@@ -15,30 +15,28 @@ interface IContainer extends IComponent
 {
 	/**
 	 * Adds the component to the container.
-	 * @param  IComponent
-	 * @param  string|int
+	 * @param  string|int  $name
 	 * @return static
 	 */
 	function addComponent(IComponent $component, $name);
 
 	/**
 	 * Removes the component from the container.
-	 * @param  IComponent
 	 * @return void
 	 */
 	function removeComponent(IComponent $component);
 
 	/**
 	 * Returns component specified by name or path.
-	 * @param  string|int
+	 * @param  string|int  $name
 	 * @return IComponent|null
 	 */
 	function getComponent($name);
 
 	/**
 	 * Iterates over descendants components.
-	 * @param  bool
-	 * @param  string
+	 * @param  bool  $deep
+	 * @param  string  $filterType
 	 * @return \Iterator
 	 */
 	function getComponents($deep = false, $filterType = null);

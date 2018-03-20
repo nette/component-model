@@ -29,9 +29,8 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Adds the component to the container.
-	 * @param  IComponent
-	 * @param  string|int
-	 * @param  string|int
+	 * @param  string|int  $name
+	 * @param  string|int  $insertBefore
 	 * @return static
 	 * @throws Nette\InvalidStateException
 	 */
@@ -108,8 +107,8 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Returns component specified by name or path.
-	 * @param  string|int
-	 * @param  bool   throw exception if component doesn't exist?
+	 * @param  string|int  $name
+	 * @param  bool  $throw  throw exception if component doesn't exist?
 	 * @return IComponent|null
 	 */
 	public function getComponent($name, $throw = true)
@@ -163,7 +162,7 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
-	 * @param  string
+	 * @param  string  $name
 	 * @return IComponent|null
 	 */
 	protected function createComponent($name)
@@ -183,8 +182,8 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Iterates over descendants components.
-	 * @param  bool
-	 * @param  string
+	 * @param  bool  $deep  return all descendant?
+	 * @param  string  $filterType  class type to return
 	 * @return \Iterator
 	 */
 	public function getComponents($deep = false, $filterType = null)
