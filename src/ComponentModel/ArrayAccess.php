@@ -19,8 +19,8 @@ trait ArrayAccess
 {
 	/**
 	 * Adds the component to the container.
-	 * @param  string|int
-	 * @param  IComponent
+	 * @param  string|int  $name
+	 * @param  IComponent  $component
 	 */
 	public function offsetSet($name, $component): void
 	{
@@ -31,7 +31,7 @@ trait ArrayAccess
 
 	/**
 	 * Returns component specified by name. Throws exception if component doesn't exist.
-	 * @param  string|int
+	 * @param  string|int  $name
 	 * @throws Nette\InvalidArgumentException
 	 */
 	public function offsetGet($name): IComponent
@@ -43,7 +43,7 @@ trait ArrayAccess
 
 	/**
 	 * Does component specified by name exists?
-	 * @param  string|int
+	 * @param  string|int  $name
 	 */
 	public function offsetExists($name): bool
 	{
@@ -54,7 +54,7 @@ trait ArrayAccess
 
 	/**
 	 * Removes component from the container.
-	 * @param  string|int
+	 * @param  string|int  $name
 	 */
 	public function offsetUnset($name): void
 	{

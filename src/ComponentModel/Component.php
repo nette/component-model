@@ -41,7 +41,7 @@ abstract class Component implements IComponent
 
 	/**
 	 * Finds the closest ancestor specified by class or interface name.
-	 * @param  bool $throw   throw exception if component doesn't exist?
+	 * @param  bool  $throw   throw exception if component doesn't exist?
 	 */
 	final public function lookup(?string $type, bool $throw = true): ?IComponent
 	{
@@ -205,7 +205,7 @@ abstract class Component implements IComponent
 
 	/**
 	 * Refreshes monitors.
-	 * @param  array|null $missing (array = attaching, null = detaching)
+	 * @param  array|null  $missing  (array = attaching, null = detaching)
 	 */
 	private function refreshMonitors(int $depth, array &$missing = null, array &$listeners = []): void
 	{
