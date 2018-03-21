@@ -213,7 +213,7 @@ class Container extends Component implements IContainer
 	 * Is container cloning now?
 	 * @internal
 	 */
-	final public function _isCloning(): ?Container
+	final public function _isCloning(): ?self
 	{
 		return $this->cloning;
 	}
