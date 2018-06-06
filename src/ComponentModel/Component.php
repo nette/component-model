@@ -34,11 +34,6 @@ abstract class Component implements IComponent
 	private $monitors = [];
 
 
-	public function __construct()
-	{
-	}
-
-
 	/**
 	 * Finds the closest ancestor specified by class or interface name.
 	 * @param  bool  $throw   throw exception if component doesn't exist?
