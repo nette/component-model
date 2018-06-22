@@ -16,6 +16,8 @@ Nette Framework introduces several classes and interfaces for all these types of
 
 Documentation can be found on the [website](https://doc.nette.org/components).
 
+If you like Nette, **[please make a donation now](https://nette.org/donate)**. Thank you!
+
 
 Installation
 ------------
