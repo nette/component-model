@@ -66,7 +66,10 @@ abstract class Component implements IComponent
 		}
 
 		if ($throw && $this->monitors[$type][0] === null) {
-			throw new Nette\InvalidStateException("Component '$this->name' is not attached to '$type'.");
+			$message = $this->name !== null
+				? "Component '$this->name' is not attached to '$type'."
+				: "Component of type '" . static::class . "' is not attached to '$type'.";
+			throw new Nette\InvalidStateException($message);
 		}
 
 		return $this->monitors[$type][0];
