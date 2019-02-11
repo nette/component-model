@@ -28,6 +28,7 @@ interface IContainer extends IComponent
 
 	/**
 	 * Returns component specified by name or path.
+	 * @throws Nette\InvalidArgumentException  if component doesn't exist
 	 */
 	function getComponent(string $name): ?IComponent;
 
