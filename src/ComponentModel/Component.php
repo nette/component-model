@@ -40,6 +40,21 @@ abstract class Component implements IComponent
 	 */
 	final public function lookup(?string $type, bool $throw = true): ?IComponent
 	{
+		if (($res = $this->lookupIfExists($type)) || !$throw) {
+			return $res;
+		}
+		$message = $this->name !== null
+			? "Component '$this->name' is not attached to '$type'."
+			: "Component of type '" . static::class . "' is not attached to '$type'.";
+		throw new Nette\InvalidStateException($message);
+	}
+
+
+	/**
+	 * Finds the closest ancestor specified by class or interface name.
+	 */
+	final public function lookupIfExists(?string $type): ?IComponent
+	{
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
 			$path = self::NAME_SEPARATOR . $this->name;
@@ -64,25 +79,28 @@ abstract class Component implements IComponent
 				$this->monitors[$type] = [null, null, null, []]; // not found
 			}
 		}
-
-		if ($throw && $this->monitors[$type][0] === null) {
-			$message = $this->name !== null
-				? "Component '$this->name' is not attached to '$type'."
-				: "Component of type '" . static::class . "' is not attached to '$type'.";
-			throw new Nette\InvalidStateException($message);
-		}
-
 		return $this->monitors[$type][0];
 	}
 
 
 	/**
 	 * Finds the closest ancestor specified by class or interface name and returns backtrace path.
-	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
+	 * A path is the concatenation of component names separated by dash.
 	 */
 	final public function lookupPath(string $type = null, bool $throw = true): ?string
 	{
-		$this->lookup($type, $throw);
+		$throw ? $this->lookup($type) : $this->lookupIfExists($type);
+		return $this->monitors[$type][2];
+	}
+
+
+	/**
+	 * Finds the closest ancestor specified by class or interface name and returns backtrace path.
+	 * A path is the concatenation of component names separated by dash.
+	 */
+	final public function lookupPathIfExists(?string $type): ?string
+	{
+		$this->lookupIfExists($type);
 		return $this->monitors[$type][2];
 	}
 
@@ -96,7 +114,7 @@ abstract class Component implements IComponent
 			$attached = [$this, 'attached'];
 			$detached = [$this, 'detached'];
 		}
-		if (($obj = $this->lookup($type, false)) && $attached && !in_array([$attached, $detached], $this->monitors[$type][3], true)) {
+		if (($obj = $this->lookupIfExists($type)) && $attached && !in_array([$attached, $detached], $this->monitors[$type][3], true)) {
 			$attached($obj);
 		}
 		$this->monitors[$type][3][] = [$attached, $detached]; // mark as monitored
@@ -242,7 +260,7 @@ abstract class Component implements IComponent
 
 				} else {
 					$this->monitors[$type] = null; // forces re-lookup
-					if ($obj = $this->lookup($type, false)) {
+					if ($obj = $this->lookupIfExists($type)) {
 						foreach ($rec[3] as $pair) {
 							$listeners[] = [$pair[0], $obj];
 						}
