@@ -106,42 +106,65 @@ class Container extends Component implements IContainer
 	 */
 	final public function getComponent(string $name, bool $throw = true): ?IComponent
 	{
+		if (!$throw) {
+			return $component->getComponentIfExists($name);
+		}
+
 		[$name] = $parts = explode(self::NAME_SEPARATOR, $name, 2);
 
 		if (!isset($this->components[$name])) {
-			if (!preg_match(self::NAME_REGEXP, $name)) {
-				if ($throw) {
-					throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
-				}
-				return null;
-			}
-
-			$component = $this->createComponent($name);
-			if ($component && !isset($this->components[$name])) {
-				$this->addComponent($component, $name);
-			}
+			$this->doCreateComponent($name);
 		}
 
 		$component = $this->components[$name] ?? null;
-		if ($component !== null) {
-			if (!isset($parts[1])) {
-				return $component;
-
-			} elseif ($component instanceof IContainer) {
-				return $component->getComponent($parts[1], $throw);
-
-			} elseif ($throw) {
-				throw new Nette\InvalidArgumentException("Component with name '$name' is not container and cannot have '$parts[1]' component.");
-			}
-
-		} elseif ($throw) {
+		if (!$component) {
 			$hint = Nette\Utils\ObjectHelpers::getSuggestion(array_merge(
 				array_keys($this->components),
 				array_map('lcfirst', preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this)))
 			), $name);
 			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist" . ($hint ? ", did you mean '$hint'?" : '.'));
+
+		} elseif (isset($parts[1])) {
+			if (!$component instanceof IContainer) {
+				throw new Nette\InvalidArgumentException("Component with name '$name' is not container and cannot have '$parts[1]' component.");
+			}
+			return $component->getComponent($parts[1]);
 		}
-		return null;
+
+		return $component;
+	}
+
+
+	/**
+	 * Returns component specified by name or path.
+	 */
+	final public function getComponentIfExists(string $name): ?IComponent
+	{
+		[$name] = $parts = explode(self::NAME_SEPARATOR, $name, 2);
+
+		if (!isset($this->components[$name]) && preg_match(self::NAME_REGEXP, $name)) {
+			$this->doCreateComponent($name);
+		}
+
+		$component = $this->components[$name] ?? null;
+		if (isset($parts[1])) {
+			return $component instanceof IContainer
+				? ($component instanceof self ? $component->getComponentIfExists($parts[1]) : $component->getComponent($parts[1]))
+				: null;
+		}
+		return $component;
+	}
+
+
+	private function doCreateComponent($name): void
+	{
+		if (!preg_match(self::NAME_REGEXP, $name)) {
+			throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
+		}
+		$component = $this->createComponent($name);
+		if ($component && !isset($this->components[$name])) {
+			$this->addComponent($component, $name);
+		}
 	}
 
 

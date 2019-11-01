@@ -29,3 +29,12 @@ $a->addComponent(new TestClass, 'a');
 Assert::exception(function () use ($a) {
 	$a->getComponent('b');
 }, Nette\InvalidStateException::class, "Component 'a' already has a parent.");
+
+
+
+$a = new TestClass;
+$a->addComponent(new TestClass, 'a');
+
+Assert::exception(function () use ($a) {
+	$a->getComponentIfExists('b');
+}, Nette\InvalidStateException::class, "Component 'a' already has a parent.");

@@ -25,3 +25,9 @@ Assert::exception(function () {
 	$a = new TestClass;
 	$a->getComponent('b');
 }, Nette\UnexpectedValueException::class, 'Method TestClass::createComponentB() did not return or create the desired component.');
+
+
+Assert::exception(function () {
+	$a = new TestClass;
+	$a->getComponentIfExists('b');
+}, Nette\UnexpectedValueException::class, 'Method TestClass::createComponentB() did not return or create the desired component.');

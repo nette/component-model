@@ -29,3 +29,12 @@ $a->addComponent(new TestClass, 'a');
 Assert::exception(function () use ($a) {
 	$a->getComponent('b');
 }, TypeError::class);
+
+
+
+$a = new TestClass;
+$a->addComponent(new TestClass, 'a');
+
+Assert::exception(function () use ($a) {
+	$a->getComponentIfExists('b');
+}, TypeError::class);

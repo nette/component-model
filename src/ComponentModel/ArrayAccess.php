@@ -48,7 +48,7 @@ trait ArrayAccess
 	public function offsetExists($name): bool
 	{
 		$name = is_int($name) ? (string) $name : $name;
-		return $this->getComponent($name, false) !== null;
+		return $this->getComponentIfExists($name) !== null;
 	}
 
 
@@ -59,7 +59,7 @@ trait ArrayAccess
 	public function offsetUnset($name): void
 	{
 		$name = is_int($name) ? (string) $name : $name;
-		if ($component = $this->getComponent($name, false)) {
+		if ($component = $this->getComponentIfExists($name)) {
 			$this->removeComponent($component);
 		}
 	}
