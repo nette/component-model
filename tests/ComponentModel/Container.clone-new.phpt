@@ -91,7 +91,7 @@ Assert::same([
 	'ATTACHED(A, C)',
 ], Notes::fetch());
 
-Assert::same('b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', false));
+Assert::same('b-c-d-e', $a['b']['c']['d']['e']->lookupPath(A::class));
 
 
 // ==> clone 'c'
@@ -103,7 +103,7 @@ Assert::same([
 
 Assert::null($dolly['d']['e']->lookupPath('A', false));
 
-Assert::same('d-e', $dolly['d']['e']->lookupPath('C', false));
+Assert::same('d-e', $dolly['d']['e']->lookupPath(C::class));
 
 
 // ==> clone 'b'
