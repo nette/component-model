@@ -19,6 +19,8 @@ use Nette;
  */
 class Container extends Component implements IContainer
 {
+	private const NAME_REGEXP = '#^[a-zA-Z0-9_]+$#D';
+
 	/** @var IComponent[] */
 	private $components = [];
 
@@ -40,7 +42,7 @@ class Container extends Component implements IContainer
 			$name = $component->getName();
 		}
 
-		if (!preg_match('#^[a-zA-Z0-9_]+$#D', $name)) {
+		if (!preg_match(self::NAME_REGEXP, $name)) {
 			throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
 		}
 
@@ -107,7 +109,7 @@ class Container extends Component implements IContainer
 		[$name] = $parts = explode(self::NAME_SEPARATOR, $name, 2);
 
 		if (!isset($this->components[$name])) {
-			if (!preg_match('#^[a-zA-Z0-9_]+$#D', $name)) {
+			if (!preg_match(self::NAME_REGEXP, $name)) {
 				if ($throw) {
 					throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
 				}
