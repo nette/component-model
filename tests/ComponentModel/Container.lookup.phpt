@@ -44,7 +44,7 @@ $a['b']['c']['c2']['d'] = $d = new D;
 // top
 Assert::same($a, $d->lookup(null));
 Assert::same($a, $d->lookupIfExists(null));
-Assert::same('b-c-c2-d', $d->lookupPath());
+Assert::same('b-c-c2-d', $d->lookupPath(null));
 Assert::same('b-c-c2-d', $d->lookupPathIfExists(null));
 
 // specified top

@@ -17,17 +17,6 @@ require __DIR__ . '/../bootstrap.php';
 class TestClass extends Container implements ArrayAccess
 {
 	use Nette\ComponentModel\ArrayAccess;
-
-	public function attached(IComponent $obj): void
-	{
-		Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
-	}
-
-
-	public function detached(IComponent $obj): void
-	{
-		Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
-	}
 }
 
 
@@ -91,12 +80,12 @@ Assert::same([
 // 'a' becoming 'b' parent
 $a['b'] = $b;
 
-Assert::same('b-c-d-e', $d['e']->lookupPath('A'));
-Assert::same($a, $d['e']->lookup('A'));
-Assert::same('b-c-d-e', $d['e']->lookupPath());
+Assert::same('b-c-d-e', $d['e']->lookupPath(A::class));
+Assert::same($a, $d['e']->lookup(A::class));
+Assert::same('b-c-d-e', $d['e']->lookupPath(null));
 Assert::same($a, $d['e']->lookup(null));
-Assert::same('c-d-e', $d['e']->lookupPath('B'));
-Assert::same($b, $d['e']->lookup('B'));
+Assert::same('c-d-e', $d['e']->lookupPath(B::class));
+Assert::same($b, $d['e']->lookup(B::class));
 
 Assert::same($a['b-c'], $b['c']);
 Notes::fetch(); // clear

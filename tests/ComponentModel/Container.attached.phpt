@@ -74,12 +74,12 @@ Assert::same([
 // 'a' becoming 'b' parent
 $a['b'] = $b;
 
-Assert::same('b-c-d-e', $d['e']->lookupPath('A'));
-Assert::same($a, $d['e']->lookup('A'));
-Assert::same('b-c-d-e', $d['e']->lookupPath());
+Assert::same('b-c-d-e', $d['e']->lookupPath(A::class));
+Assert::same($a, $d['e']->lookup(A::class));
+Assert::same('b-c-d-e', $d['e']->lookupPath(null));
 Assert::same($a, $d['e']->lookup(null));
-Assert::same('c-d-e', $d['e']->lookupPath('B'));
-Assert::same($b, $d['e']->lookup('B'));
+Assert::same('c-d-e', $d['e']->lookupPath(B::class));
+Assert::same($b, $d['e']->lookup(B::class));
 
 Assert::same($a['b-c'], $b['c']);
 Notes::fetch(); // clear

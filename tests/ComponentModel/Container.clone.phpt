@@ -75,7 +75,7 @@ Assert::same([
 	'C::ATTACHED(A)',
 ], Notes::fetch());
 
-Assert::same('b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', false));
+Assert::same('b-c-d-e', $a['b']['c']['d']['e']->lookupPath(A::class));
 
 
 // ==> clone 'c'
@@ -85,9 +85,9 @@ Assert::same([
 	'C::detached(A)',
 ], Notes::fetch());
 
-Assert::null($dolly['d']['e']->lookupPath('A', false));
+Assert::null($dolly['d']['e']->lookupPathIfExists(A::class));
 
-Assert::same('d-e', $dolly['d']['e']->lookupPath('C', false));
+Assert::same('d-e', $dolly['d']['e']->lookupPath(C::class));
 
 
 // ==> clone 'b'
