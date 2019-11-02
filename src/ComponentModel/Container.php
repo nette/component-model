@@ -107,7 +107,7 @@ class Container extends Component implements IContainer
 	final public function getComponent(string $name, bool $throw = true): ?IComponent
 	{
 		if (!$throw) {
-			return $component->getComponentIfExists($name);
+			return $this->getComponentIfExists($name);
 		}
 
 		[$name] = $parts = explode(self::NAME_SEPARATOR, $name, 2);
