@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nette\ComponentModel;
 
+use Nette;
+
 
 /**
  * Containers are objects that logically contain zero or more IComponent components.
