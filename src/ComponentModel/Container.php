@@ -14,8 +14,6 @@ use Nette;
 
 /**
  * ComponentContainer is default implementation of IContainer.
- *
- * @property-read \Iterator $components
  */
 class Container extends Component implements IContainer
 {
@@ -224,6 +222,7 @@ class Container extends Component implements IContainer
 	{
 		if ($this->components) {
 			$oldMyself = reset($this->components)->getParent();
+			assert($oldMyself instanceof self);
 			$oldMyself->cloning = $this;
 			foreach ($this->components as $name => $component) {
 				$this->components[$name] = clone $component;
