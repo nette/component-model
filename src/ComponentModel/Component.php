@@ -241,7 +241,7 @@ abstract class Component implements IComponent
 					$this->monitors[$type] = [null, null, null, $rec[3]];
 
 				} else {
-					$this->monitors[$type] = null; // forces re-lookup
+					unset($this->monitors[$type]); // forces re-lookup
 					if ($obj = $this->lookup($type, false)) {
 						foreach ($rec[3] as $pair) {
 							$listeners[] = [$pair[0], $obj];

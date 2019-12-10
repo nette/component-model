@@ -199,6 +199,7 @@ class Container extends Component implements IContainer
 	{
 		if ($this->components) {
 			$oldMyself = reset($this->components)->getParent();
+			assert($oldMyself instanceof self);
 			$oldMyself->cloning = $this;
 			foreach ($this->components as $name => $component) {
 				$this->components[$name] = clone $component;
