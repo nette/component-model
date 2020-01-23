@@ -28,12 +28,13 @@ interface IContainer extends IComponent
 
 	/**
 	 * Returns component specified by name or path.
-	 * @throws Nette\InvalidArgumentException  if component doesn't exist
+	 * @throws \Nette\InvalidArgumentException  if component doesn't exist
 	 */
 	function getComponent(string $name): ?IComponent;
 
 	/**
 	 * Iterates over descendants components.
+	 * @return \Iterator<int|string,IComponent>
 	 */
 	function getComponents(): \Iterator;
 }

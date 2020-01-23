@@ -30,7 +30,7 @@ abstract class Component implements IComponent
 	/** @var string|null */
 	private $name;
 
-	/** @var array of [type => [obj, depth, path, array of [attached, detached]]] */
+	/** @var array<string, array{?IComponent, ?int, ?string, array<int, array{?callable, ?callable}>}> means [type => [obj, depth, path, [attached, detached]]] */
 	private $monitors = [];
 
 
@@ -203,7 +203,8 @@ abstract class Component implements IComponent
 
 	/**
 	 * Refreshes monitors.
-	 * @param  array|null  $missing  (array = attaching, null = detaching)
+	 * @param  array<string,true>|null  $missing  (array = attaching, null = detaching)
+	 * @param  array<int,array{callable,IComponent}>  $listeners
 	 */
 	private function refreshMonitors(int $depth, array &$missing = null, array &$listeners = []): void
 	{

@@ -166,6 +166,7 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Iterates over descendants components.
+	 * @return \Iterator<int|string,IComponent>
 	 */
 	final public function getComponents(bool $deep = false, string $filterType = null): \Iterator
 	{
