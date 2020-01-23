@@ -40,6 +40,9 @@ class Container extends Component implements IContainer
 	{
 		if ($name === null) {
 			$name = $component->getName();
+			if ($name === null) {
+				throw new Nette\InvalidStateException("Missing component's name.");
+			}
 		}
 
 		if (!preg_match(self::NAME_REGEXP, $name)) {
@@ -65,7 +68,7 @@ class Container extends Component implements IContainer
 		if (isset($this->components[$insertBefore])) {
 			$tmp = [];
 			foreach ($this->components as $k => $v) {
-				if ($k === $insertBefore) {
+				if ((string) $k === $insertBefore) {
 					$tmp[$name] = $component;
 				}
 				$tmp[$k] = $v;
@@ -136,7 +139,7 @@ class Container extends Component implements IContainer
 
 		} elseif ($throw) {
 			$hint = Nette\Utils\ObjectHelpers::getSuggestion(array_merge(
-				array_keys($this->components),
+				array_map('strval', array_keys($this->components)),
 				array_map('lcfirst', preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this)))
 			), $name);
 			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist" . ($hint ? ", did you mean '$hint'?" : '.'));
