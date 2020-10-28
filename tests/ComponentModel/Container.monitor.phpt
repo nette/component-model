@@ -113,7 +113,7 @@ class FooControl extends TestClass
 
 	protected function myAttached(TestClass $obj)
 	{
-		Notes::add('ATTACHED(' . get_class($obj) . ', ' . get_class($this) . ')');
+		Notes::add('ATTACHED(' . get_class($obj) . ', ' . static::class . ')');
 	}
 }
 
@@ -121,10 +121,10 @@ class FooPresenter extends TestClass
 {
 }
 
-$presenter = new FooPresenter();
-$presenter['control'] = new FooControl();
-$presenter['form'] = new FooForm();
-$presenter['form']['form'] = new FooForm();
+$presenter = new FooPresenter;
+$presenter['control'] = new FooControl;
+$presenter['form'] = new FooForm;
+$presenter['form']['form'] = new FooForm;
 
 Assert::same([
 	'ATTACHED(FooPresenter, FooControl)',
