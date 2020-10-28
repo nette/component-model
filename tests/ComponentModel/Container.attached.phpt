@@ -20,13 +20,13 @@ class TestClass extends Container implements ArrayAccess
 
 	public function attached(IComponent $obj): void
 	{
-		Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
+		Notes::add(static::class . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
 
 	public function detached(IComponent $obj): void
 	{
-		Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
+		Notes::add(static::class . '::detached(' . get_class($obj) . ')');
 	}
 }
 
@@ -90,7 +90,7 @@ class FooForm extends TestClass
 	protected function validateParent(\Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
-		$this->monitor(__CLASS__);
+		$this->monitor(self::class);
 	}
 }
 
@@ -108,10 +108,10 @@ class FooPresenter extends TestClass
 {
 }
 
-$presenter = new FooPresenter();
-$presenter['control'] = new FooControl();
-$presenter['form'] = new FooForm();
-$presenter['form']['form'] = new FooForm();
+$presenter = new FooPresenter;
+$presenter['control'] = new FooControl;
+$presenter['form'] = new FooForm;
+$presenter['form']['form'] = new FooForm;
 
 Assert::same([
 	'FooControl::ATTACHED(FooPresenter)',
