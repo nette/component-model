@@ -2,7 +2,7 @@ Nette Component Model
 =====================
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/nette/component-model.svg)](https://packagist.org/packages/nette/component-model)
-[![Build Status](https://travis-ci.org/nette/component-model.svg?branch=master)](https://travis-ci.org/nette/component-model)
+[![Tests](https://github.com/nette/component-model/workflows/Tests/badge.svg?branch=master)](https://github.com/nette/component-model/actions)
 [![Coverage Status](https://coveralls.io/repos/github/nette/component-model/badge.svg?branch=master)](https://coveralls.io/github/nette/component-model?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/nette/component-model/v/stable)](https://github.com/nette/component-model/releases)
 [![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/component-model/blob/master/license.md)
