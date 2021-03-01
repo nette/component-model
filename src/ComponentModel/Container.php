@@ -22,10 +22,9 @@ class Container extends Component implements IContainer
 	private const NAME_REGEXP = '#^[a-zA-Z0-9_]+$#D';
 
 	/** @var IComponent[] */
-	private $components = [];
+	private array $components = [];
 
-	/** @var Container|null */
-	private $cloning;
+	private ?Container $cloning = null;
 
 
 	/********************* interface IContainer ****************d*g**/
