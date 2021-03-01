@@ -24,14 +24,11 @@ abstract class Component implements IComponent
 {
 	use Nette\SmartObject;
 
-	/** @var IContainer|null */
-	private $parent;
-
-	/** @var string|null */
-	private $name;
+	private ?IContainer $parent = null;
+	private ?string $name = null;
 
 	/** @var array<string, array{?IComponent, ?int, ?string, array<int, array{?callable, ?callable}>}> means [type => [obj, depth, path, [attached, detached]]] */
-	private $monitors = [];
+	private array $monitors = [];
 
 
 	/**
