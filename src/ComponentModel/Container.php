@@ -140,7 +140,7 @@ class Container extends Component implements IContainer
 		} elseif ($throw) {
 			$hint = Nette\Utils\ObjectHelpers::getSuggestion(array_merge(
 				array_map('strval', array_keys($this->components)),
-				array_map('lcfirst', preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this)))
+				array_map('lcfirst', preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this))),
 			), $name);
 			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist" . ($hint ? ", did you mean '$hint'?" : '.'));
 		}
@@ -182,9 +182,7 @@ class Container extends Component implements IContainer
 			$iterator = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
 		}
 		if ($filterType) {
-			$iterator = new \CallbackFilterIterator($iterator, function ($item) use ($filterType) {
-				return $item instanceof $filterType;
-			});
+			$iterator = new \CallbackFilterIterator($iterator, fn($item) => $item instanceof $filterType);
 		}
 		return $iterator;
 	}

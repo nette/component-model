@@ -20,13 +20,13 @@ class TestClass extends Container implements ArrayAccess
 
 	public function attached(IComponent $obj): void
 	{
-		Notes::add(static::class . '::ATTACHED(' . get_class($obj) . ')');
+		Notes::add(static::class . '::ATTACHED(' . $obj::class . ')');
 	}
 
 
 	public function detached(IComponent $obj): void
 	{
-		Notes::add(static::class . '::detached(' . get_class($obj) . ')');
+		Notes::add(static::class . '::detached(' . $obj::class . ')');
 	}
 }
 
