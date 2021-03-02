@@ -90,10 +90,6 @@ abstract class Component implements IComponent
 	 */
 	final public function monitor(string $type, callable $attached = null, callable $detached = null): void
 	{
-		if (func_num_args() === 1) {
-			$attached = [$this, 'attached'];
-			$detached = [$this, 'detached'];
-		}
 		if (
 			($obj = $this->lookup($type, false))
 			&& $attached
@@ -119,7 +115,7 @@ abstract class Component implements IComponent
 	 * becomes attached to a monitored object. Do not call this method yourself.
 	 * @deprecated  use monitor($type, $attached)
 	 */
-	protected function attached(IComponent $obj): void
+	final protected function attached(IComponent $obj): void
 	{
 	}
 
@@ -129,7 +125,7 @@ abstract class Component implements IComponent
 	 * becomes detached from a monitored object. Do not call this method yourself.
 	 * @deprecated  use monitor($type, null, $detached)
 	 */
-	protected function detached(IComponent $obj): void
+	final protected function detached(IComponent $obj): void
 	{
 	}
 
