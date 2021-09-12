@@ -15,7 +15,9 @@ use Nette;
 /**
  * ComponentContainer is default implementation of IContainer.
  *
- * @property-read IComponent[] $components
+ * @template T of IComponent
+ * @implements IContainer<T>
+ * @property-read T[] $components
  */
 class Container extends Component implements IContainer
 {
