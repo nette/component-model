@@ -15,7 +15,9 @@ use Nette;
 /**
  * Manages a collection of child components.
  *
- * @property-read IComponent[] $components
+ * @template T of IComponent
+ * @implements IContainer<T>
+ * @property-read T[] $components
  */
 class Container extends Component implements IContainer
 {

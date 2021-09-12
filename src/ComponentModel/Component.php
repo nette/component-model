@@ -15,8 +15,10 @@ use Nette;
 /**
  * Base class for all components. Components have a parent, name, and can be monitored by ancestors.
  *
+ * @template T of IContainer
+ * @implements IComponent<T>
  * @property-read string $name
- * @property-read IContainer|null $parent
+ * @property-read T|null $parent
  */
 abstract class Component implements IComponent
 {
@@ -149,6 +151,7 @@ abstract class Component implements IComponent
 
 	/**
 	 * Returns the parent container if any.
+	 * @return T
 	 */
 	final public function getParent(): ?IContainer
 	{
@@ -159,6 +162,7 @@ abstract class Component implements IComponent
 	/**
 	 * Sets or removes the parent of this component. This method is managed by containers and should
 	 * not be called by applications
+	 * @param  T  $parent
 	 * @throws Nette\InvalidStateException
 	 * @internal
 	 */
@@ -200,6 +204,7 @@ abstract class Component implements IComponent
 	/**
 	 * Validates the new parent before it's set.
 	 * Descendant classes can override this to implement custom validation logic.
+	 * @param  T  $parent
 	 * @throws Nette\InvalidStateException
 	 */
 	protected function validateParent(IContainer $parent): void
