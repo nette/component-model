@@ -15,6 +15,9 @@ use function array_filter, array_keys, array_map, array_merge, assert, explode, 
 
 /**
  * Manages a collection of child components.
+ *
+ * @template T of IComponent
+ * @implements IContainer<T>
  */
 class Container extends Component implements IContainer
 {
