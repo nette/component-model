@@ -93,7 +93,7 @@ Notes::fetch(); // clear
 
 class FooForm extends TestClass
 {
-	protected function validateParent(\Nette\ComponentModel\IContainer $parent): void
+	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
 		$this->monitor(self::class, createAttached($this));
@@ -103,7 +103,7 @@ class FooForm extends TestClass
 
 class FooControl extends TestClass
 {
-	protected function validateParent(\Nette\ComponentModel\IContainer $parent): void
+	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
 		$this->monitor('FooPresenter', [$this, 'myAttached']);

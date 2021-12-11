@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nette\ComponentModel;
 
+use Nette;
+
 
 /**
  * Containers are objects that logically contain zero or more IComponent components.
@@ -28,7 +30,7 @@ interface IContainer extends IComponent
 
 	/**
 	 * Returns component specified by name or path.
-	 * @throws \Nette\InvalidArgumentException  if component doesn't exist
+	 * @throws Nette\InvalidArgumentException  if component doesn't exist
 	 */
 	function getComponent(string $name): ?IComponent;
 
