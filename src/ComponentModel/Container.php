@@ -36,7 +36,7 @@ class Container extends Component implements IContainer
 	 * @return static
 	 * @throws Nette\InvalidStateException
 	 */
-	public function addComponent(IComponent $component, ?string $name, string $insertBefore = null)
+	public function addComponent(IComponent $component, ?string $name, ?string $insertBefore = null)
 	{
 		if ($name === null) {
 			$name = $component->getName();
@@ -182,7 +182,7 @@ class Container extends Component implements IContainer
 	 * Iterates over descendants components.
 	 * @return \Iterator<int|string,IComponent>
 	 */
-	final public function getComponents(bool $deep = false, string $filterType = null): \Iterator
+	final public function getComponents(bool $deep = false, ?string $filterType = null): \Iterator
 	{
 		$iterator = new RecursiveComponentIterator($this->components);
 		if ($deep) {
