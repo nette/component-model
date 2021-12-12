@@ -40,6 +40,7 @@ function export($obj)
 			$res['children'][$name] = export($child);
 		}
 	}
+
 	return $res;
 }
 

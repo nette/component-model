@@ -49,6 +49,7 @@ abstract class Component implements IComponent
 				if ($type ? $obj instanceof $type : $parent === null) {
 					break;
 				}
+
 				$path = self::NAME_SEPARATOR . $obj->getName() . $path;
 				$depth++;
 				$obj = $parent; // IComponent::getParent()
@@ -96,6 +97,7 @@ abstract class Component implements IComponent
 			$attached = [$this, 'attached'];
 			$detached = [$this, 'detached'];
 		}
+
 		if (
 			($obj = $this->lookup($type, false))
 			&& $attached
@@ -103,6 +105,7 @@ abstract class Component implements IComponent
 		) {
 			$attached($obj);
 		}
+
 		$this->monitors[$type][3][] = [$attached, $detached]; // mark as monitored
 	}
 
@@ -191,6 +194,7 @@ abstract class Component implements IComponent
 			$tmp = [];
 			$this->refreshMonitors(0, $tmp);
 		}
+
 		return $this;
 	}
 
@@ -233,7 +237,6 @@ abstract class Component implements IComponent
 					}
 				}
 			}
-
 		} else { // attaching
 			foreach ($this->monitors as $type => $rec) {
 				if (isset($rec[0])) { // is in cache yet
@@ -254,6 +257,7 @@ abstract class Component implements IComponent
 					} else {
 						$missing[$type] = true;
 					}
+
 					$this->monitors[$type][3] = $rec[3]; // mark as monitored
 				}
 			}
@@ -287,7 +291,6 @@ abstract class Component implements IComponent
 			if ($this->parent === null) { // not cloning
 				$this->refreshMonitors(0);
 			}
-
 		} else {
 			$this->parent = null;
 			$this->refreshMonitors(0);

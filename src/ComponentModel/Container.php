@@ -59,6 +59,7 @@ class Container extends Component implements IContainer
 			if ($obj === $component) {
 				throw new Nette\InvalidStateException("Circular reference detected while adding component '$name'.");
 			}
+
 			$obj = $obj->getParent();
 		} while ($obj !== null);
 
@@ -71,8 +72,10 @@ class Container extends Component implements IContainer
 				if ((string) $k === $insertBefore) {
 					$tmp[$name] = $component;
 				}
+
 				$tmp[$k] = $v;
 			}
+
 			$this->components = $tmp;
 		} else {
 			$this->components[$name] = $component;
@@ -84,6 +87,7 @@ class Container extends Component implements IContainer
 			unset($this->components[$name]); // undo
 			throw $e;
 		}
+
 		return $this;
 	}
 
@@ -116,6 +120,7 @@ class Container extends Component implements IContainer
 				if ($throw) {
 					throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
 				}
+
 				return null;
 			}
 
@@ -136,7 +141,6 @@ class Container extends Component implements IContainer
 			} elseif ($throw) {
 				throw new Nette\InvalidArgumentException("Component with name '$name' is not container and cannot have '$parts[1]' component.");
 			}
-
 		} elseif ($throw) {
 			$hint = Nette\Utils\ObjectHelpers::getSuggestion(array_merge(
 				array_map('strval', array_keys($this->components)),
@@ -144,6 +148,7 @@ class Container extends Component implements IContainer
 			), $name);
 			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist" . ($hint ? ", did you mean '$hint'?" : '.'));
 		}
+
 		return null;
 	}
 
@@ -165,8 +170,10 @@ class Container extends Component implements IContainer
 				$class = static::class;
 				throw new Nette\UnexpectedValueException("Method $class::$method() did not return or create the desired component.");
 			}
+
 			return $component;
 		}
+
 		return null;
 	}
 
@@ -181,11 +188,13 @@ class Container extends Component implements IContainer
 		if ($deep) {
 			$iterator = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
 		}
+
 		if ($filterType) {
 			$iterator = new \CallbackFilterIterator($iterator, function ($item) use ($filterType) {
 				return $item instanceof $filterType;
 			});
 		}
+
 		return $iterator;
 	}
 
@@ -214,8 +223,10 @@ class Container extends Component implements IContainer
 			foreach ($this->components as $name => $component) {
 				$this->components[$name] = clone $component;
 			}
+
 			$oldMyself->cloning = null;
 		}
+
 		parent::__clone();
 	}
 
