@@ -159,11 +159,10 @@ abstract class Component implements IComponent
 	/**
 	 * Sets or removes the parent of this component. This method is managed by containers and should
 	 * not be called by applications
-	 * @return static
 	 * @throws Nette\InvalidStateException
 	 * @internal
 	 */
-	public function setParent(?IContainer $parent, ?string $name = null)
+	public function setParent(?IContainer $parent, ?string $name = null): static
 	{
 		if ($parent === null && $this->parent === null && $name !== null) {
 			$this->name = $name; // just rename
