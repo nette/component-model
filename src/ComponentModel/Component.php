@@ -42,7 +42,7 @@ abstract class Component implements IComponent
 	{
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
-			$path = self::NAME_SEPARATOR . $this->name;
+			$path = self::NameSeparator . $this->name;
 			$depth = 1;
 			while ($obj !== null) {
 				$parent = $obj->getParent();
@@ -50,7 +50,7 @@ abstract class Component implements IComponent
 					break;
 				}
 
-				$path = self::NAME_SEPARATOR . $obj->getName() . $path;
+				$path = self::NameSeparator . $obj->getName() . $path;
 				$depth++;
 				$obj = $parent; // IComponent::getParent()
 				if ($obj === $this) {
