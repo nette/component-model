@@ -14,7 +14,7 @@ Introduction
 Components are the foundation of reusable code. They make your work easier and allow you to profit from community work. Components are wonderful.
 Nette Framework introduces several classes and interfaces for all these types of components.
 
-Documentation can be found on the [website](https://doc.nette.org/components).
+Documentation can be found on the [website](https://doc.nette.org/component-model).
 
 If you like Nette, **[please make a donation now](https://nette.org/donate)**. Thank you!
 
