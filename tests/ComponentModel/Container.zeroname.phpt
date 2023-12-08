@@ -21,5 +21,5 @@ Assert::same('0', $container->getComponent('0')->getName());
 $container->addComponent($c1 = new Container, '1', '0');
 Assert::same(
 	[1 => $c1, 0 => $c0],
-	(array) $container->getComponents(),
+	$container->getComponents(),
 );

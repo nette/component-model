@@ -36,7 +36,7 @@ interface IContainer extends IComponent
 
 	/**
 	 * Iterates over descendants components.
-	 * @return \Iterator<int|string,IComponent>
+	 * @return iterable<int|string,IComponent>
 	 */
-	function getComponents(): \Iterator;
+	function getComponents(): iterable;
 }

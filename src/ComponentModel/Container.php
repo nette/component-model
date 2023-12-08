@@ -15,7 +15,7 @@ use Nette;
 /**
  * ComponentContainer is default implementation of IContainer.
  *
- * @property-read \Iterator $components
+ * @property-read IComponent[] $components
  */
 class Container extends Component implements IContainer
 {
@@ -179,20 +179,22 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Iterates over descendants components.
-	 * @return \Iterator<int|string,IComponent>
+	 * @return iterable<int|string,IComponent>
 	 */
-	final public function getComponents(bool $deep = false, ?string $filterType = null): \Iterator
+	final public function getComponents(bool $deep = false, ?string $filterType = null): iterable
 	{
-		$iterator = new RecursiveComponentIterator($this->components);
 		if ($deep) {
+			$iterator = new RecursiveComponentIterator($this->components);
 			$iterator = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
+			if ($filterType) {
+				$iterator = new \CallbackFilterIterator($iterator, fn($item) => $item instanceof $filterType);
+			}
+			return $iterator;
 		}
 
-		if ($filterType) {
-			$iterator = new \CallbackFilterIterator($iterator, fn($item) => $item instanceof $filterType);
-		}
-
-		return $iterator;
+		return $filterType
+			? array_filter($this->components, fn($item) => $item instanceof $filterType)
+			: $this->components;
 	}
 
 
