@@ -93,6 +93,8 @@ abstract class Component implements IComponent
 	final public function monitor(string $type, ?callable $attached = null, ?callable $detached = null): void
 	{
 		if (func_num_args() === 1) {
+			$class = (new \ReflectionMethod($this, 'attached'))->getDeclaringClass()->getName();
+			trigger_error(__METHOD__ . "(): Methods $class::attached() and $class::detached() are deprecated, use monitor(\$type, [attached], [detached])", E_USER_DEPRECATED);
 			$attached = [$this, 'attached'];
 			$detached = [$this, 'detached'];
 		}
