@@ -67,7 +67,7 @@ class MonitoringComponent extends BaseContainer
 	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
-		$this->monitor(self::class);
+		@$this->monitor(self::class); // deprecated
 	}
 }
 
@@ -80,8 +80,8 @@ class DoubleMonitoringComponent extends BaseContainer
 	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
-		$this->monitor(RootContainer::class);
-		$this->monitor(BaseContainer::class); // double
+		@$this->monitor(RootContainer::class); // deprecated
+		@$this->monitor(BaseContainer::class); // double
 	}
 }
 
@@ -92,9 +92,9 @@ test('attached and detached callbacks', function () {
 	$d = new D;
 	$d['e'] = new E;
 	$b = new B;
-	$b->monitor(A::class);
+	@$b->monitor(A::class); // deprecated
 	$b['c'] = new C;
-	$b['c']->monitor(A::class);
+	@$b['c']->monitor(A::class); // deprecated
 	$b['c']['d'] = $d;
 
 	// 'a' becoming 'b' parent
@@ -120,9 +120,9 @@ test('lookup methods', function () {
 	$d = new D;
 	$d['e'] = new E;
 	$b = new B;
-	$b->monitor(A::class);
+	@$b->monitor(A::class); // deprecated
 	$b['c'] = new C;
-	$b['c']->monitor(A::class);
+	@$b['c']->monitor(A::class); // deprecated
 	$b['c']['d'] = $d;
 
 	$a = new A;
