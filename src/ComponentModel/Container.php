@@ -197,6 +197,23 @@ class Container extends Component implements IContainer
 
 
 	/**
+	 * Retrieves the entire hierarchy of components, including all nested child components (depth-first).
+	 * @return list<IComponent>
+	 */
+	final public function getComponentTree(): array
+	{
+		$res = [];
+		foreach ($this->components as $component) {
+			$res[] = $component;
+			if ($component instanceof self) {
+				$res = array_merge($res, $component->getComponentTree());
+			}
+		}
+		return $res;
+	}
+
+
+	/**
 	 * Descendant can override this method to disallow insert a child by throwing an Nette\InvalidStateException.
 	 * @throws Nette\InvalidStateException
 	 */
