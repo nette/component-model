@@ -71,8 +71,8 @@ test('monitor registration', function () {
 	$a['b']['c']['d'] = new D;
 	$a['b']['c']['d']['e'] = new E;
 
-	$a['b']->monitor(A::class);
-	$a['b']['c']->monitor(A::class);
+	@$a['b']->monitor(A::class); // deprecated
+	@$a['b']['c']->monitor(A::class); // deprecated
 
 	Assert::same([
 		'B::ATTACHED(A)',
@@ -90,8 +90,8 @@ test('clone detaches from parent', function () {
 	$a['b']['c']['d'] = new D;
 	$a['b']['c']['d']['e'] = new E;
 
-	$a['b']->monitor(A::class);
-	$a['b']['c']->monitor(A::class);
+	@$a['b']->monitor(A::class); // deprecated
+	@$a['b']['c']->monitor(A::class); // deprecated
 
 	BaseContainer::$log = [];
 
@@ -114,8 +114,8 @@ test('clone subtree', function () {
 	$a['b']['c']['d'] = new D;
 	$a['b']['c']['d']['e'] = new E;
 
-	$a['b']->monitor(A::class);
-	$a['b']['c']->monitor(A::class);
+	@$a['b']->monitor(A::class); // deprecated
+	@$a['b']['c']->monitor(A::class); // deprecated
 
 	BaseContainer::$log = [];
 
@@ -136,8 +136,8 @@ test('reattach cloned component', function () {
 	$a['b']['c']['d'] = new D;
 	$a['b']['c']['d']['e'] = new E;
 
-	$a['b']->monitor(A::class);
-	$a['b']['c']->monitor(A::class);
+	@$a['b']->monitor(A::class); // deprecated
+	@$a['b']['c']->monitor(A::class); // deprecated
 
 	$dolly = clone $a['b'];
 
