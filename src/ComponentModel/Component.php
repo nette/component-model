@@ -94,11 +94,8 @@ abstract class Component implements IComponent
 	 */
 	final public function monitor(string $type, ?callable $attached = null, ?callable $detached = null): void
 	{
-		if (func_num_args() === 1) {
-			$class = (new \ReflectionMethod($this, 'attached'))->getDeclaringClass()->getName();
-			trigger_error(__METHOD__ . "(): Methods $class::attached() and $class::detached() are deprecated, use monitor(\$type, [attached], [detached])", E_USER_DEPRECATED);
-			$attached = [$this, 'attached'];
-			$detached = [$this, 'detached'];
+		if (!$attached && !$detached) {
+			throw new Nette\InvalidStateException('At least one handler is required.');
 		}
 
 		if (
@@ -119,26 +116,6 @@ abstract class Component implements IComponent
 	final public function unmonitor(string $type): void
 	{
 		unset($this->monitors[$type]);
-	}
-
-
-	/**
-	 * This method will be called when the component (or component's parent)
-	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * @deprecated  use monitor($type, $attached)
-	 */
-	protected function attached(IComponent $obj): void
-	{
-	}
-
-
-	/**
-	 * This method will be called before the component (or component's parent)
-	 * becomes detached from a monitored object. Do not call this method yourself.
-	 * @deprecated  use monitor($type, null, $detached)
-	 */
-	protected function detached(IComponent $obj): void
-	{
 	}
 
 
