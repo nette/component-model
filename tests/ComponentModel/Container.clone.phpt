@@ -11,24 +11,18 @@ use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
+
+
+function handler(IComponent $sender, string $label): Closure
+{
+	return fn(IComponent $obj) => Notes::add($sender::class . '::' . $label . '(' . $obj::class . ')');
+}
 
 
 class TestClass extends Container implements ArrayAccess
 {
 	use Nette\ComponentModel\ArrayAccess;
-
-	public function attached(IComponent $obj): void
-	{
-		Notes::add(static::class . '::ATTACHED(' . $obj::class . ')');
-	}
-
-
-	public function detached(IComponent $obj): void
-	{
-		Notes::add(static::class . '::detached(' . $obj::class . ')');
-	}
 }
 
 
@@ -67,9 +61,8 @@ $a['b']['c'] = new C;
 $a['b']['c']['d'] = new D;
 $a['b']['c']['d']['e'] = new E;
 
-$a['b']->monitor(A::class);
-$a['b']->monitor(A::class);
-$a['b']['c']->monitor(A::class);
+$a['b']->monitor(A::class, handler($a['b'], 'ATTACHED'), handler($a['b'], 'detached'));
+$a['b']['c']->monitor(A::class, handler($a['b']['c'], 'ATTACHED'), handler($a['b']['c'], 'detached'));
 
 Assert::same([
 	'B::ATTACHED(A)',
