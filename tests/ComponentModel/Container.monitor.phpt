@@ -37,18 +37,10 @@ class E extends TestClass
 }
 
 
-function createAttached(IComponent $sender)
+function handler(IComponent $sender, string $label): Closure
 {
-	return function (IComponent $obj) use ($sender) {
-		Notes::add('ATTACHED(' . get_class($obj) . ', ' . get_class($sender) . ')');
-	};
-}
-
-
-function createDetached(IComponent $sender)
-{
-	return function (IComponent $obj) use ($sender) {
-		Notes::add('detached(' . get_class($obj) . ', ' . get_class($sender) . ')');
+	return function (IComponent $obj) use ($sender, $label) {
+		Notes::add($label . '(' . get_class($obj) . ', ' . get_class($sender) . ')');
 	};
 }
 
@@ -56,9 +48,9 @@ function createDetached(IComponent $sender)
 $d = new D;
 $d['e'] = new E;
 $b = new B;
-$b->monitor('a', createAttached($b), createDetached($b));
+$b->monitor(A::class, handler($b, 'ATTACHED'), handler($b, 'detached'));
 $b['c'] = new C;
-$b['c']->monitor('a', createAttached($b['c']), createDetached($b['c']));
+$b['c']->monitor(A::class, handler($b['c'], 'ATTACHED'), handler($b['c'], 'detached'));
 $b['c']['d'] = $d;
 
 // 'a' becoming 'b' parent
@@ -96,7 +88,7 @@ class FooForm extends TestClass
 	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
-		$this->monitor(self::class, createAttached($this));
+		$this->monitor(self::class, handler($this, 'ATTACHED'));
 	}
 }
 
@@ -106,8 +98,8 @@ class FooControl extends TestClass
 	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
-		$this->monitor('FooPresenter', [$this, 'myAttached']);
-		$this->monitor('TestClass', [$this, 'myAttached']); // double
+		$this->monitor(FooPresenter::class, [$this, 'myAttached']);
+		$this->monitor(TestClass::class, [$this, 'myAttached']); // double
 	}
 
 

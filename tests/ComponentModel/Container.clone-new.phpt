@@ -62,18 +62,10 @@ class E extends TestClass
 }
 
 
-function createAttached(IComponent $sender)
+function handler(IComponent $sender, string $label): Closure
 {
-	return function (IComponent $obj) use ($sender) {
-		Notes::add('ATTACHED(' . get_class($obj) . ', ' . get_class($sender) . ')');
-	};
-}
-
-
-function createDetached(IComponent $sender)
-{
-	return function (IComponent $obj) use ($sender) {
-		Notes::add('detached(' . get_class($obj) . ', ' . get_class($sender) . ')');
+	return function (IComponent $obj) use ($sender, $label) {
+		Notes::add($label . '(' . get_class($obj) . ', ' . get_class($sender) . ')');
 	};
 }
 
@@ -84,8 +76,8 @@ $a['b']['c'] = new C;
 $a['b']['c']['d'] = new D;
 $a['b']['c']['d']['e'] = new E;
 
-$a['b']->monitor('a', createAttached($a['b']), createDetached($a['b']));
-$a['b']['c']->monitor('a', createAttached($a['b']['c']), createDetached($a['b']['c']));
+$a['b']->monitor(A::class, handler($a['b'], 'ATTACHED'), handler($a['b'], 'detached'));
+$a['b']['c']->monitor(A::class, handler($a['b']['c'], 'ATTACHED'), handler($a['b']['c'], 'detached'));
 
 Assert::same([
 	'ATTACHED(A, B)',
@@ -102,7 +94,7 @@ Assert::same([
 	'detached(A, C)',
 ], Notes::fetch());
 
-Assert::null($dolly['d']['e']->lookupPath('A', false));
+Assert::null($dolly['d']['e']->lookupPath(A::class, false));
 
 Assert::same('d-e', $dolly['d']['e']->lookupPath(C::class));
 

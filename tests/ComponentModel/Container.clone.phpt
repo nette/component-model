@@ -67,9 +67,9 @@ $a['b']['c'] = new C;
 $a['b']['c']['d'] = new D;
 $a['b']['c']['d']['e'] = new E;
 
-$a['b']->monitor('a');
-$a['b']->monitor('a');
-$a['b']['c']->monitor('a');
+$a['b']->monitor(A::class);
+$a['b']->monitor(A::class);
+$a['b']['c']->monitor(A::class);
 
 Assert::same([
 	'B::ATTACHED(A)',
@@ -86,7 +86,7 @@ Assert::same([
 	'C::detached(A)',
 ], Notes::fetch());
 
-Assert::null($dolly['d']['e']->lookupPath('A', false));
+Assert::null($dolly['d']['e']->lookupPath(A::class, false));
 
 Assert::same('d-e', $dolly['d']['e']->lookupPath(C::class));
 

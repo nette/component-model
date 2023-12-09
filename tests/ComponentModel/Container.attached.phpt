@@ -50,9 +50,9 @@ class E extends TestClass
 $d = new D;
 $d['e'] = new E;
 $b = new B;
-$b->monitor('a');
+$b->monitor(A::class);
 $b['c'] = new C;
-$b['c']->monitor('a');
+$b['c']->monitor(A::class);
 $b['c']['d'] = $d;
 
 // 'a' becoming 'b' parent
@@ -99,8 +99,8 @@ class FooControl extends TestClass
 	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
-		$this->monitor('FooPresenter');
-		$this->monitor('TestClass'); // double
+		$this->monitor(FooPresenter::class);
+		$this->monitor(TestClass::class); // double
 	}
 }
 
