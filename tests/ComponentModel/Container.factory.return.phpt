@@ -29,9 +29,11 @@ Assert::same('b', $b->getName());
 Assert::count(1, $a->getComponents());
 
 
-Assert::exception(function () use ($a) {
-	$a->getComponent('B')->getName();
-}, InvalidArgumentException::class, "Component with name 'B' does not exist, did you mean 'b'?");
+Assert::exception(
+	fn() => $a->getComponent('B')->getName(),
+	InvalidArgumentException::class,
+	"Component with name 'B' does not exist, did you mean 'b'?",
+);
 
 
 $a->removeComponent($b);

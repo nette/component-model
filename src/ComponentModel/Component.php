@@ -101,9 +101,9 @@ abstract class Component implements IComponent
 		}
 
 		if (
-			($obj = $this->lookup($type, false))
+			($obj = $this->lookup($type, throw: false))
 			&& $attached
-			&& !in_array([$attached, $detached], $this->monitors[$type][3], true)
+			&& !in_array([$attached, $detached], $this->monitors[$type][3], strict: true)
 		) {
 			$attached($obj);
 		}
@@ -252,7 +252,7 @@ abstract class Component implements IComponent
 
 				} else {
 					unset($this->monitors[$type]); // forces re-lookup
-					if ($obj = $this->lookup($type, false)) {
+					if ($obj = $this->lookup($type, throw: false)) {
 						foreach ($rec[3] as $pair) {
 							$listeners[] = [$pair[0], $obj];
 						}
@@ -268,7 +268,7 @@ abstract class Component implements IComponent
 		if ($depth === 0) { // call listeners
 			$prev = [];
 			foreach ($listeners as $item) {
-				if ($item[0] && !in_array($item, $prev, true)) {
+				if ($item[0] && !in_array($item, $prev, strict: true)) {
 					$item[0]($item[1]);
 					$prev[] = $item;
 				}

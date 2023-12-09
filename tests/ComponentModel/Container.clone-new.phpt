@@ -21,20 +21,20 @@ class TestClass extends Container implements ArrayAccess
 
 	public function attached(IComponent $obj): void
 	{
-		Notes::add(static::class . '::ATTACHED(' . get_class($obj) . ')');
+		Notes::add(static::class . '::ATTACHED(' . $obj::class . ')');
 	}
 
 
 	public function detached(IComponent $obj): void
 	{
-		Notes::add(static::class . '::detached(' . get_class($obj) . ')');
+		Notes::add(static::class . '::detached(' . $obj::class . ')');
 	}
 }
 
 
 function export($obj)
 {
-	$res = ['(' . get_class($obj) . ')' => $obj->getName()];
+	$res = ['(' . $obj::class . ')' => $obj->getName()];
 	if ($obj instanceof IContainer) {
 		foreach ($obj->getComponents() as $name => $child) {
 			$res['children'][$name] = export($child);
@@ -64,9 +64,7 @@ class E extends TestClass
 
 function handler(IComponent $sender, string $label): Closure
 {
-	return function (IComponent $obj) use ($sender, $label) {
-		Notes::add($label . '(' . get_class($obj) . ', ' . get_class($sender) . ')');
-	};
+	return fn(IComponent $obj) => Notes::add($label . '(' . $obj::class . ', ' . $sender::class . ')');
 }
 
 
@@ -94,7 +92,7 @@ Assert::same([
 	'detached(A, C)',
 ], Notes::fetch());
 
-Assert::null($dolly['d']['e']->lookupPath(A::class, false));
+Assert::null($dolly['d']['e']->lookupPath(A::class, throw: false));
 
 Assert::same('d-e', $dolly['d']['e']->lookupPath(C::class));
 

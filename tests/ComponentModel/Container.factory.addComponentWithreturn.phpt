@@ -27,6 +27,8 @@ $a = new TestClass;
 Assert::same('b', $a->getComponent('b')->getName());
 
 
-Assert::exception(function () use ($a) {
-	$a->getComponent('B')->getName();
-}, InvalidArgumentException::class, "Component with name 'B' does not exist, did you mean 'b'?");
+Assert::exception(
+	fn() => $a->getComponent('B')->getName(),
+	InvalidArgumentException::class,
+	"Component with name 'B' does not exist, did you mean 'b'?",
+);

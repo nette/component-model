@@ -59,20 +59,28 @@ Assert::same('d', $d->lookupPath(C::class));
 
 
 // self
-Assert::exception(function () use ($d) {
-	$d->lookup(D::class);
-}, Nette\InvalidStateException::class, "Component 'd' is not attached to 'D'.");
+Assert::exception(
+	fn() => $d->lookup(D::class),
+	Nette\InvalidStateException::class,
+	"Component 'd' is not attached to 'D'.",
+);
 
-Assert::exception(function () use ($d) {
-	$d->lookupPath(D::class);
-}, Nette\InvalidStateException::class, "Component 'd' is not attached to 'D'.");
+Assert::exception(
+	fn() => $d->lookupPath(D::class),
+	Nette\InvalidStateException::class,
+	"Component 'd' is not attached to 'D'.",
+);
 
 
 // not exists
-Assert::exception(function () use ($d) {
-	$d->lookup('Unknown');
-}, Nette\InvalidStateException::class, "Component 'd' is not attached to 'Unknown'.");
+Assert::exception(
+	fn() => $d->lookup('Unknown'),
+	Nette\InvalidStateException::class,
+	"Component 'd' is not attached to 'Unknown'.",
+);
 
-Assert::exception(function () use ($d) {
-	$d->lookupPath('Unknown');
-}, Nette\InvalidStateException::class, "Component 'd' is not attached to 'Unknown'.");
+Assert::exception(
+	fn() => $d->lookupPath('Unknown'),
+	Nette\InvalidStateException::class,
+	"Component 'd' is not attached to 'Unknown'.",
+);

@@ -39,9 +39,7 @@ class E extends TestClass
 
 function handler(IComponent $sender, string $label): Closure
 {
-	return function (IComponent $obj) use ($sender, $label) {
-		Notes::add($label . '(' . get_class($obj) . ', ' . get_class($sender) . ')');
-	};
+	return fn(IComponent $obj) => Notes::add($label . '(' . $obj::class . ', ' . $sender::class . ')');
 }
 
 
@@ -105,7 +103,7 @@ class FooControl extends TestClass
 
 	protected function myAttached(TestClass $obj)
 	{
-		Notes::add('ATTACHED(' . get_class($obj) . ', ' . static::class . ')');
+		Notes::add('ATTACHED(' . $obj::class . ', ' . static::class . ')');
 	}
 }
 
