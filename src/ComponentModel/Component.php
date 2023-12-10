@@ -37,6 +37,7 @@ abstract class Component implements IComponent
 	/**
 	 * Finds the closest ancestor specified by class or interface name.
 	 * @param  bool  $throw   throw exception if component doesn't exist?
+	 * @return ($throw is true ? IComponent : ?IComponent)
 	 */
 	final public function lookup(?string $type, bool $throw = true): ?IComponent
 	{
@@ -80,6 +81,7 @@ abstract class Component implements IComponent
 	/**
 	 * Finds the closest ancestor specified by class or interface name and returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
+	 * @return ($throw is true ? string : ?string)
 	 */
 	final public function lookupPath(?string $type = null, bool $throw = true): ?string
 	{

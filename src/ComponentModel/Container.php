@@ -110,6 +110,7 @@ class Container extends Component implements IContainer
 	/**
 	 * Returns component specified by name or path.
 	 * @param  bool  $throw  throw exception if component doesn't exist?
+	 * @return ($throw is true ? IComponent : ?IComponent)
 	 */
 	final public function getComponent(string $name, bool $throw = true): ?IComponent
 	{
