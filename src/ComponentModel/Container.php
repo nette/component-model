@@ -178,12 +178,13 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Iterates over descendants components.
-	 * @return iterable<int|string,IComponent>
+	 * Returns immediate child components.
+	 * @return array<int|string,IComponent>
 	 */
-	final public function getComponents(bool $deep = false, ?string $filterType = null): iterable
+	final public function getComponents(): iterable
 	{
-		if ($deep) {
+		$filterType = func_get_args()[1] ?? null;
+		if (func_get_args()[0] ?? null) { // back compatibility
 			$iterator = new RecursiveComponentIterator($this->components);
 			$iterator = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
 			if ($filterType) {

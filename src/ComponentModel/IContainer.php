@@ -35,8 +35,8 @@ interface IContainer extends IComponent
 	function getComponent(string $name): ?IComponent;
 
 	/**
-	 * Iterates over descendants components.
-	 * @return iterable<int|string,IComponent>
+	 * Returns immediate child components.
+	 * @return array<int|string,IComponent>
 	 */
 	function getComponents(): iterable;
 }
