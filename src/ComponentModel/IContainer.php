@@ -13,7 +13,7 @@ use Nette;
 
 
 /**
- * Containers are objects that logically contain zero or more IComponent components.
+ * Defines functionality for objects that can contain other components.
  */
 interface IContainer extends IComponent
 {

@@ -11,7 +11,7 @@ namespace Nette\ComponentModel;
 
 
 /**
- * Provides functionality required by all components.
+ * Defines core functionality required by all components.
  */
 interface IComponent
 {
@@ -29,7 +29,7 @@ interface IComponent
 	function getParent(): ?IContainer;
 
 	/**
-	 * Sets the parent of this component.
+	 * Sets the parent container and optionally renames the component.
 	 */
 	function setParent(?IContainer $parent, ?string $name = null): static;
 }

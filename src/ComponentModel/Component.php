@@ -13,9 +13,7 @@ use Nette;
 
 
 /**
- * Component is the base class for all components.
- *
- * Components are objects implementing IComponent. They has parent component and own name.
+ * Base class for all components. Components have a parent, name, and can be monitored by ancestors.
  *
  * @property-read string $name
  * @property-read IContainer|null $parent
@@ -32,7 +30,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Finds the closest ancestor specified by class or interface name.
+	 * Finds the closest ancestor of specified type.
 	 * @param  bool  $throw   throw exception if component doesn't exist?
 	 * @return ($throw is true ? IComponent : ?IComponent)
 	 */
@@ -88,7 +86,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Starts monitoring of ancestors.
+	 * Starts monitoring ancestors for attach/detach events.
 	 */
 	final public function monitor(string $type, ?callable $attached = null, ?callable $detached = null): void
 	{
@@ -110,7 +108,7 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Stops monitoring of ancestors.
+	 * Stops monitoring ancestors of specified type.
 	 */
 	final public function unmonitor(string $type): void
 	{
@@ -198,8 +196,8 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Is called by a component when it is about to be set new parent. Descendant can
-	 * override this method to disallow a parent change by throwing an Nette\InvalidStateException
+	 * Validates the new parent before it's set.
+	 * Descendant classes can override this to implement custom validation logic.
 	 * @throws Nette\InvalidStateException
 	 */
 	protected function validateParent(IContainer $parent): void
