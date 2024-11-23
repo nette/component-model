@@ -19,7 +19,7 @@ interface IComponent
 	/** Separator for component names in path concatenation. */
 	public const NameSeparator = '-';
 
-	/** @deprecated use IComponent::NameSeparator */
+	#[\Deprecated('use Component::NameSeparator')]
 	public const NAME_SEPARATOR = self::NameSeparator;
 
 	function getName(): ?string;
