@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nette\ComponentModel;
 
+use function iterator_count;
+
 
 /**
  * Recursive component iterator. See Container::getComponents().

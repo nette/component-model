@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\ComponentModel;
 
 use Nette;
+use function func_num_args, in_array, substr;
 
 
 /**

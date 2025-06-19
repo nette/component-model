@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\ComponentModel;
 
 use Nette;
+use function array_filter, array_keys, array_map, array_merge, assert, explode, func_get_args, get_class_methods, method_exists, preg_filter, preg_match, reset, ucfirst;
 
 
 /**

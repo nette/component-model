@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\ComponentModel;
 
 use Nette;
+use function is_int;
 
 
 /**
