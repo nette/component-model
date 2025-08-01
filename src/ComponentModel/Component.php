@@ -298,17 +298,8 @@ abstract class Component implements IComponent
 	/**
 	 * Prevents serialization.
 	 */
-	final public function __sleep()
+	final public function __serialize()
 	{
 		throw new Nette\NotImplementedException('Object serialization is not supported by class ' . static::class);
-	}
-
-
-	/**
-	 * Prevents unserialization.
-	 */
-	final public function __wakeup()
-	{
-		throw new Nette\NotImplementedException('Object unserialization is not supported by class ' . static::class);
 	}
 }
