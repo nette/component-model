@@ -37,6 +37,7 @@ abstract class Component implements IComponent
 	 */
 	final public function lookup(?string $type, bool $throw = true): ?IComponent
 	{
+		$type ??= '';
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
 			$path = self::NameSeparator . $this->name;
@@ -82,7 +83,7 @@ abstract class Component implements IComponent
 	final public function lookupPath(?string $type = null, bool $throw = true): ?string
 	{
 		$this->lookup($type, $throw);
-		return $this->monitors[$type][2];
+		return $this->monitors[$type ?? ''][2];
 	}
 
 
