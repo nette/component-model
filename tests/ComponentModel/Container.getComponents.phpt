@@ -57,10 +57,24 @@ Assert::same([
 	'two',
 	'button1',
 ], array_keys(iterator_to_array($list)));
+// again
+Assert::same([
+	'one',
+	'inner',
+	'inner2',
+	'button2',
+	'two',
+	'button1',
+], array_keys(iterator_to_array($list)));
 
 
 // Recursive & filter I
 $list = $c->getComponents(true, Button::class);
+Assert::same([
+	'button2',
+	'button1',
+], array_keys(iterator_to_array($list)));
+// again
 Assert::same([
 	'button2',
 	'button1',
