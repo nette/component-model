@@ -28,4 +28,4 @@ The recommended way to install is via Composer:
 composer require nette/component-model
 ```
 
-It requires PHP version 8.1 and supports PHP up to 8.5.
+It requires PHP version 8.2 and supports PHP up to 8.5.
