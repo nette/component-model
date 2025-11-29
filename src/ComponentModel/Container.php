@@ -16,7 +16,7 @@ use function array_filter, array_keys, array_map, array_merge, assert, explode, 
 /**
  * Manages a collection of child components.
  *
- * @property-read IComponent[] $components
+ * @property-deprecated T[] $components
  */
 class Container extends Component implements IContainer
 {
