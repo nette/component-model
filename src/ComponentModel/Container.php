@@ -184,19 +184,17 @@ class Container extends Component implements IContainer
 	 */
 	final public function getComponents(): iterable
 	{
-		$filterType = func_get_args()[1] ?? null;
-		if (func_get_args()[0] ?? null) { // back compatibility
-			$iterator = new RecursiveComponentIterator($this->components);
-			$iterator = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
-			if ($filterType) {
-				$iterator = new \CallbackFilterIterator($iterator, fn($item) => $item instanceof $filterType);
-			}
-			return $iterator;
+		if (func_get_args()[0] ?? null) {
+			throw new DeprecatedException('Using Container::getComponents() with recursive flag is deprecated. Use getComponentTree() instead.');
 		}
 
-		return $filterType
-			? array_filter($this->components, fn($item) => $item instanceof $filterType)
-			: $this->components;
+		$filterType = func_get_args()[1] ?? null;
+		if ($filterType) {
+			trigger_error('Using Container::getComponents() with filter type is deprecated.', E_USER_DEPRECATED);
+			return array_filter($this->components, fn($item) => $item instanceof $filterType);
+		}
+
+		return $this->components;
 	}
 
 
