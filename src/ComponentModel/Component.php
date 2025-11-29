@@ -14,8 +14,8 @@ use function func_num_args, in_array, substr;
 /**
  * Base class for all components. Components have a parent, name, and can be monitored by ancestors.
  *
- * @property-read string $name
- * @property-read ?IContainer $parent
+ * @property-deprecated string $name
+ * @property-deprecated ?IContainer $parent
  */
 abstract class Component implements IComponent
 {
