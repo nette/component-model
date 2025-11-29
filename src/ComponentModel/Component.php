@@ -77,7 +77,7 @@ abstract class Component implements IComponent
 
 	/**
 	 * Finds the closest ancestor specified by class or interface name and returns backtrace path.
-	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
+	 * A path is the concatenation of component names separated by self::NameSeparator.
 	 * @return ($throw is true ? string : ?string)
 	 */
 	final public function lookupPath(?string $type = null, bool $throw = true): ?string
