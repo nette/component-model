@@ -184,8 +184,8 @@ test('reattach cloned component', function () {
 	$a['dolly'] = $dolly;
 
 	Assert::same([
-		'ATTACHED(A, C)',
 		'ATTACHED(A, B)',
+		'ATTACHED(A, C)',
 	], $log);
 
 	Assert::same([
