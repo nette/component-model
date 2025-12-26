@@ -104,8 +104,8 @@ Assert::same([
 $a['dolly'] = $dolly;
 
 Assert::same([
-	'C::ATTACHED(A)',
 	'B::ATTACHED(A)',
+	'C::ATTACHED(A)',
 ], Notes::fetch());
 
 Assert::same([

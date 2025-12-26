@@ -236,6 +236,7 @@ abstract class Component implements IComponent
 				}
 			}
 		} else { // attaching
+			$ofs = 0;
 			foreach ($this->monitors as $type => $rec) {
 				if (isset($rec[0])) { // is in cache yet
 					continue;
@@ -250,7 +251,7 @@ abstract class Component implements IComponent
 					unset($this->monitors[$type]); // forces re-lookup
 					if ($obj = $this->lookup($type, throw: false)) {
 						foreach ($rec[3] as $pair) {
-							$listeners[] = [$pair[0], $obj];
+							array_splice($listeners, $ofs++, 0, [[$pair[0], $obj]]);
 						}
 					} else {
 						$missing[$type] = true;

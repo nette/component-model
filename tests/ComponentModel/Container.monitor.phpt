@@ -55,8 +55,8 @@ $b['c']['d'] = $d;
 $a = new A;
 $a['b'] = $b;
 Assert::same([
-	'ATTACHED(A, C)',
 	'ATTACHED(A, B)',
+	'ATTACHED(A, C)',
 ], Notes::fetch());
 
 
