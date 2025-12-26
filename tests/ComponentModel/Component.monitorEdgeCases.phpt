@@ -77,7 +77,7 @@ test('parent removes children before their listeners run', function () {
 	$root->addComponent($parent, 'parent');
 
 	Assert::true($parent->attachedCalled);
-	Assert::true($child->attachedCalled); // problem: child listener is called although parent removed it first
+	Assert::false($child->attachedCalled, 'Child listener NOT called - parent removed it first');
 	Assert::same(0, count($parent->getComponents()));
 });
 
@@ -102,7 +102,7 @@ test('multiple nested children removed by parent', function () {
 	$root->addComponent($parent, 'parent');
 
 	foreach ($children as $i => $child) {
-		Assert::true($child->attachedCalled); // problem: child listener is called although parent removed it first
+		Assert::false($child->attachedCalled, "Child $i listener NOT called - parent removed it first");
 	}
 
 	Assert::same(0, count($parent->getComponents()));
@@ -129,7 +129,7 @@ test('child removes sibling before its listener runs', function () {
 	$root->addComponent($container, 'container');
 
 	Assert::true($child1->attachedCalled);
-	Assert::true($child2->attachedCalled); // problem: child2 listener is called although child1 removed it first
+	Assert::false($child2->attachedCalled, 'child2 listener NOT called - child1 removed it first');
 	Assert::same(1, count($container->getComponents()));
 });
 
@@ -251,6 +251,6 @@ test('component moved to later-visited container is not reprocessed', function (
 	// 4. Without $processed tracking, mover would be processed again
 	$root->addComponent($parent, 'parent');
 
-	Assert::same(2, $callCount); // problem: callback must be called exactly once
+	Assert::same(1, $callCount, 'Callback must be called exactly once');
 	Assert::same($secondContainer, $mover->getParent());
 });

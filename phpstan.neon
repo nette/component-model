@@ -14,7 +14,7 @@ parameters:
 		- # complex tuple type of $monitors is hard to express precisely for all mutation paths
 			message: '#^Property Nette\\ComponentModel\\Component\:\:\$monitors .+ does not accept .+\.$#'
 			identifier: assign.propertyType
-			count: 5
+			count: 4
 			path: src/ComponentModel/Component.php
 
 		- # IContainer::getComponent() has optional $throw parameter in implementation

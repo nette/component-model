@@ -28,9 +28,6 @@ abstract class Component implements IComponent
 	 */
 	private array $monitors = [];
 
-	/** Prevents nested listener execution during refreshMonitors */
-	private bool $callingListeners = false;
-
 
 	/**
 	 * Finds the closest ancestor of specified type.
@@ -199,33 +196,19 @@ abstract class Component implements IComponent
 	/**
 	 * Refreshes monitors when attaching/detaching from component tree.
 	 * @param  ?array<string, true>  $missing  null = detaching, array = attaching
-	 * @param  array<int, array{\Closure(IComponent): void, IComponent}>  $listeners
+	 * @param  array<array{\Closure(IComponent): void, int}>  $called  deduplication tracking
+	 * @param  array<int, true>  $processed  prevents reentry
 	 */
-	private function refreshMonitors(int $depth, ?array &$missing = null, array &$listeners = []): void
+	private function refreshMonitors(
+		int $depth,
+		?array &$missing = null,
+		array &$called = [],
+		array &$processed = [],
+	): void
 	{
-		if ($this instanceof IContainer) {
-			foreach ($this->getComponents() as $component) {
-				if ($component instanceof self) {
-					$component->refreshMonitors($depth + 1, $missing, $listeners);
-				}
-			}
-		}
+		$processed[spl_object_id($this)] = true;
 
-		if ($missing === null) { // detaching
-			foreach ($this->monitors as $type => [$ancestor, $inDepth, , $callbacks]) {
-				if (isset($inDepth) && $inDepth > $depth) { // only process if ancestor was deeper than current detachment point
-					assert($ancestor !== null);
-					if ($callbacks) {
-						$this->monitors[$type] = [null, null, null, $callbacks]; // clear cached object, keep listener registrations
-						foreach ($callbacks[1] as $detached) {
-							$listeners[] = [$detached, $ancestor];
-						}
-					} else { // no listeners, just cached lookup result - clear it
-						unset($this->monitors[$type]);
-					}
-				}
-			}
-		} else { // attaching
+		if ($missing !== null) { // attaching
 			foreach ($this->monitors as $type => [$ancestor, , , $callbacks]) {
 				if (isset($ancestor)) { // already cached and valid - skip
 					continue;
@@ -241,7 +224,10 @@ abstract class Component implements IComponent
 					assert($type !== '');
 					if ($ancestor = $this->lookup($type, throw: false)) {
 						foreach ($callbacks[0] as $attached) {
-							$listeners[] = [$attached, $ancestor];
+							if (!in_array($key = [$attached, spl_object_id($ancestor)], $called, strict: false)) { // deduplicate: same callback + same object = call once
+								$attached($ancestor);
+								$called[] = $key;
+							}
 						}
 					} else {
 						$missing[$type] = true; // ancestor not found - remember so we don't check again
@@ -252,18 +238,33 @@ abstract class Component implements IComponent
 			}
 		}
 
-		if ($depth === 0 && !$this->callingListeners) { // call listeners
-			$this->callingListeners = true;
-			try {
-				$called = [];
-				foreach ($listeners as [$callback, $component]) {
-					if (!in_array($key = [$callback, spl_object_id($component)], $called, strict: false)) { // deduplicate: same callback + same object = call once
-						$callback($component);
-						$called[] = $key;
+		if ($this instanceof IContainer) {
+			foreach ($this->getComponents() as $component) {
+				if ($component instanceof self
+					&& !isset($processed[spl_object_id($component)]) // component may have been processed already
+					&& $component->getParent() === $this  // may have been removed by previous sibling's listener
+				) {
+					$component->refreshMonitors($depth + 1, $missing, $called, $processed);
+				}
+			}
+		}
+
+		if ($missing === null) { // detaching
+			foreach ($this->monitors as $type => [$ancestor, $inDepth, , $callbacks]) {
+				if (isset($inDepth) && $inDepth > $depth) { // only process if ancestor was deeper than current detachment point
+					assert($ancestor !== null);
+					if ($callbacks) {
+						$this->monitors[$type] = [null, null, null, $callbacks]; // clear cached object, keep listener registrations
+						foreach ($callbacks[1] as $detached) {
+							if (!in_array($key = [$detached, spl_object_id($ancestor)], $called, strict: false)) { // deduplicate: same callback + same object = call once
+								$detached($ancestor);
+								$called[] = $key;
+							}
+						}
+					} else { // no listeners, just cached lookup result - clear it
+						unset($this->monitors[$type]);
 					}
 				}
-			} finally {
-				$this->callingListeners = false;
 			}
 		}
 	}

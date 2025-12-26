@@ -86,8 +86,8 @@ test('monitor with handlers', function () {
 	$a = new A;
 	$a['b'] = $b;
 	Assert::same([
-		'ATTACHED(A, C)',
 		'ATTACHED(A, B)',
+		'ATTACHED(A, C)',
 	], $log);
 
 	$log = [];
