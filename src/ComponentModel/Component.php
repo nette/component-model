@@ -56,19 +56,14 @@ abstract class Component implements IComponent
 				}
 			}
 
-			if ($obj) {
-				$this->monitors[$type] = [$obj, $depth, substr($path, 1), []];
-
-			} else {
-				$this->monitors[$type] = [null, null, null, []]; // not found
-			}
+			$this->monitors[$type] = $obj
+				? [$obj, $depth, substr($path, 1), []]
+				: [null, null, null, []]; // not found
 		}
 
 		if ($throw && $this->monitors[$type][0] === null) {
-			$message = $this->name !== null
-				? "Component '$this->name' is not attached to '$type'."
-				: "Component of type '" . static::class . "' is not attached to '$type'.";
-			throw new Nette\InvalidStateException($message);
+			$desc = $this->name === null ? "type of '" . static::class . "'" : "'$this->name'";
+			throw new Nette\InvalidStateException("Component $desc is not attached to '$type'.");
 		}
 
 		return $this->monitors[$type][0];
@@ -179,7 +174,7 @@ abstract class Component implements IComponent
 			throw new Nette\InvalidStateException("Component '$this->name' already has a parent.");
 		}
 
-		// remove from parent?
+		// remove from parent
 		if ($parent === null) {
 			$this->refreshMonitors(0);
 			$this->parent = null;
