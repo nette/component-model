@@ -7,12 +7,6 @@ parameters:
 			path: src/ComponentModel/Component.php
 
 		-
-			message: '#^Property Nette\\ComponentModel\\Component\:\:\$monitors \(array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\|null\}\>\) does not accept non\-empty\-array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{3\: array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\}\|array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\|null\}\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/ComponentModel/Component.php
-
-		-
 			message: '#^Property Nette\\ComponentModel\\Component\:\:\$monitors \(array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\|null\}\>\) does not accept non\-empty\-array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{3\: array\{list\<Closure\(T\)\: void\>, non\-empty\-list\<Closure\(T\)\: void\>\}\}\|array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(T\)\: void\>, list\<Closure\(T\)\: void\>\}\|null\}\>\.$#'
 			identifier: assign.propertyType
 			count: 1
