@@ -171,23 +171,17 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Returns all immediate child components.
-	 * @return array<int|string, IComponent>
+	 * @return IComponent[]
 	 */
-	final public function getComponents(): iterable
+	final public function getComponents(): array
 	{
-		$filterType = func_get_args()[1] ?? null;
-		if (func_get_args()[0] ?? null) { // back compatibility
-			$iterator = new RecursiveComponentIterator($this->components);
-			$iterator = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
-			if ($filterType) {
-				$iterator = new \CallbackFilterIterator($iterator, fn($item) => $item instanceof $filterType);
-			}
-			return $iterator;
+		if (func_get_args()[0] ?? null) {
+			throw new Nette\DeprecatedException(__METHOD__ . '() with recursive flag is deprecated. Use getComponentTree() instead.');
 		}
-
-		return $filterType
-			? array_filter($this->components, fn($item) => $item instanceof $filterType)
-			: $this->components;
+		if (func_get_args()[1] ?? null) {
+			throw new Nette\DeprecatedException('Using Container::getComponents() with filter type is deprecated.');
+		}
+		return $this->components;
 	}
 
 

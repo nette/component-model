@@ -17,20 +17,8 @@ parameters:
 			count: 5
 			path: src/ComponentModel/Component.php
 
-		- # iterator wrapping is not expressible in return type
-			message: '#^Method Nette\\ComponentModel\\Container\:\:getComponents\(\) should return array\<int\|string, Nette\\ComponentModel\\IComponent\> but returns CallbackFilterIterator\<mixed, mixed, RecursiveIteratorIterator\<Nette\\ComponentModel\\RecursiveComponentIterator\>\>\|RecursiveIteratorIterator\<Nette\\ComponentModel\\RecursiveComponentIterator\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/ComponentModel/Container.php
-
 		- # IContainer::getComponent() has optional $throw parameter in implementation
 			message: '#^Method Nette\\ComponentModel\\IContainer\:\:getComponent\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1
 			path: src/ComponentModel/Container.php
-
-		- # duck-typing: IComponent may be IContainer with getComponents()
-			message: '#^Call to an undefined method Nette\\ComponentModel\\IComponent\:\:getComponents\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/ComponentModel/RecursiveComponentIterator.php
