@@ -112,7 +112,7 @@ function testContainer(TestContainer $container): void
 	);
 
 	assertType(
-		'array<int|string, Nette\ComponentModel\IComponent>',
+		'Nette\ComponentModel\IComponent[]',
 		$container->getComponents(),
 	);
 
