@@ -11,63 +11,77 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 
-class Button extends Component
+class A extends Component
 {
 }
 
-class ComponentX extends Component
+class B extends Component
 {
 }
 
 $c = new Container;
 
-$c->addComponent(new Container, 'one');
-$c->addComponent(new ComponentX, 'two');
-$c->addComponent(new Button, 'button1');
+$c->addComponent(new Container, 'container');
+$c->addComponent(new B, 'b');
+$c->addComponent(new A, 'a');
 
-$c->getComponent('one')->addComponent(new ComponentX, 'inner');
-$c->getComponent('one')->addComponent(new Container, 'inner2');
-$c->getComponent('one')->getComponent('inner2')->addComponent(new Button, 'button2');
+$c->getComponent('container')->addComponent(new B, 'inner_b');
+$c->getComponent('container')->addComponent(new Container, 'inner_container');
+$c->getComponent('container')->getComponent('inner_container')->addComponent(new A, 'inner_a');
 
 
 // Normal
 $list = $c->getComponents();
 Assert::same([
-	'one',
-	'two',
-	'button1',
+	'container',
+	'b',
+	'a',
 ], array_keys($list));
 
 // Filter
-$list = $c->getComponents(false, Button::class);
+$list = $c->getComponents(false, A::class);
 Assert::same([
-	'button1',
+	'a',
 ], array_keys($list));
 
 
 // Recursive
 $list = $c->getComponents(true);
 Assert::same([
-	'one',
-	'inner',
-	'inner2',
-	'button2',
-	'two',
-	'button1',
+	'container',
+	'inner_b',
+	'inner_container',
+	'inner_a',
+	'b',
+	'a',
+], array_keys(iterator_to_array($list)));
+// again
+Assert::same([
+	'container',
+	'inner_b',
+	'inner_container',
+	'inner_a',
+	'b',
+	'a',
 ], array_keys(iterator_to_array($list)));
 
 
 // Recursive & filter I
-$list = $c->getComponents(true, Button::class);
+$list = $c->getComponents(true, A::class);
 Assert::same([
-	'button2',
-	'button1',
+	'inner_a',
+	'a',
+], array_keys(iterator_to_array($list)));
+// again
+Assert::same([
+	'inner_a',
+	'a',
 ], array_keys(iterator_to_array($list)));
 
 
 // Recursive & filter II
 $list = $c->getComponents(true, Nette\ComponentModel\Container::class);
 Assert::same([
-	'one',
-	'inner2',
+	'container',
+	'inner_container',
 ], array_keys(iterator_to_array($list)));

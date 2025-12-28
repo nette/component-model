@@ -12,7 +12,7 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 
-class TestClass extends Container
+class TestContainer extends Container
 {
 	public function createComponent(string $name): ?IComponent
 	{
@@ -21,8 +21,8 @@ class TestClass extends Container
 }
 
 
-$a = new TestClass;
-$a->addComponent(new TestClass, 'a');
+$a = new TestContainer;
+$a->addComponent(new TestContainer, 'a');
 
 Assert::exception(
 	fn() => $a->getComponent('b'),

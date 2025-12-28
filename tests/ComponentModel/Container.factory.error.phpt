@@ -11,7 +11,7 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 
-class TestClass extends Container
+class TestContainer extends Container
 {
 	public function createComponentB($name)
 	{
@@ -20,6 +20,6 @@ class TestClass extends Container
 
 
 Assert::exception(function () {
-	$a = new TestClass;
+	$a = new TestContainer;
 	$a->getComponent('b');
-}, Nette\UnexpectedValueException::class, 'Method TestClass::createComponentB() did not return or create the desired component.');
+}, Nette\UnexpectedValueException::class, 'Method TestContainer::createComponentB() did not return or create the desired component.');

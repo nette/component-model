@@ -11,7 +11,7 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 
-class TestClass extends Container
+class TestContainer extends Container
 {
 	public function createComponentB($name)
 	{
@@ -22,5 +22,5 @@ class TestClass extends Container
 }
 
 
-$a = new TestClass;
+$a = new TestContainer;
 Assert::same('b', $a->getComponent('b')->getName());

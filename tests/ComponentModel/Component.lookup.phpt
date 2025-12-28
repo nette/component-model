@@ -11,24 +11,24 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 
-class TestClass extends Container implements ArrayAccess
+class BaseContainer extends Container implements ArrayAccess
 {
 	use Nette\ComponentModel\ArrayAccess;
 }
 
-class A extends TestClass
+class A extends BaseContainer
 {
 }
 
-class B extends TestClass
+class B extends BaseContainer
 {
 }
 
-class C extends TestClass
+class C extends BaseContainer
 {
 }
 
-class D extends TestClass
+class D extends BaseContainer
 {
 }
 
