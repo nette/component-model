@@ -15,6 +15,7 @@ use function iterator_count;
 /**
  * Recursive component iterator. See Container::getComponents().
  * @internal
+ * @extends \RecursiveArrayIterator<int|string, IComponent>
  */
 final class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Countable
 {

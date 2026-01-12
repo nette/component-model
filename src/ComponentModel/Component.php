@@ -17,7 +17,7 @@ use function func_num_args, in_array, substr;
  * Base class for all components. Components have a parent, name, and can be monitored by ancestors.
  *
  * @property-read string $name
- * @property-read IContainer|null $parent
+ * @property-read ?IContainer $parent
  */
 abstract class Component implements IComponent
 {
@@ -31,7 +31,7 @@ abstract class Component implements IComponent
 	 * Combines cached lookup results with callback registrations for each monitored type.
 	 * Depth is used to detect when monitored ancestor becomes unreachable during detachment.
 	 * Structure: [type => [found object, depth to object, path to object, [[attached, ...], [detached, ...]]]]
-	 * @var array<string, array{?IComponent, ?int, ?string, array<int, ?array{\Closure[], \Closure[]}>}>
+	 * @var array<''|class-string<Nette\ComponentModel\IComponent>, array{?IComponent, ?int, ?string, ?array{list<\Closure(IComponent): void>, list<\Closure(IComponent): void>}}>
 	 */
 	private array $monitors = [];
 
@@ -41,8 +41,10 @@ abstract class Component implements IComponent
 
 	/**
 	 * Finds the closest ancestor of specified type.
-	 * @param  bool  $throw   throw exception if component doesn't exist?
-	 * @return ($throw is true ? IComponent : ?IComponent)
+	 * @template T of IComponent
+	 * @param ?class-string<T>  $type
+	 * @param bool  $throw  throw exception if component doesn't exist?
+	 * @return ($type is null ? ($throw is true ? IComponent : ?IComponent) : ($throw is true ? T : ?T))
 	 */
 	final public function lookup(?string $type, bool $throw = true): ?IComponent
 	{
@@ -81,7 +83,9 @@ abstract class Component implements IComponent
 
 	/**
 	 * Finds the closest ancestor specified by class or interface name and returns backtrace path.
-	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
+	 * A path is the concatenation of component names separated by self::NameSeparator.
+	 * @param ?class-string<IComponent>  $type
+	 * @param bool  $throw  throw exception if component doesn't exist?
 	 * @return ($throw is true ? string : ?string)
 	 */
 	final public function lookupPath(?string $type = null, bool $throw = true): ?string
@@ -93,6 +97,10 @@ abstract class Component implements IComponent
 
 	/**
 	 * Starts monitoring ancestors for attach/detach events.
+	 * @template T of IComponent
+	 * @param class-string<T>  $type
+	 * @param ?(callable(T): void)  $attached  called when attached to a monitored ancestor
+	 * @param ?(callable(T): void)  $detached  called before detaching from a monitored ancestor
 	 */
 	final public function monitor(string $type, ?callable $attached = null, ?callable $detached = null): void
 	{
@@ -119,6 +127,7 @@ abstract class Component implements IComponent
 
 	/**
 	 * Stops monitoring ancestors of specified type.
+	 * @param class-string<IComponent>  $type
 	 */
 	final public function unmonitor(string $type): void
 	{
@@ -218,7 +227,7 @@ abstract class Component implements IComponent
 	/**
 	 * Refreshes monitors when attaching/detaching from component tree.
 	 * @param  ?array<string, true>  $missing  null = detaching, array = attaching
-	 * @param  array<int, array{\Closure, IComponent}>  $listeners
+	 * @param  array<int, array{\Closure(IComponent): void, IComponent}>  $listeners
 	 */
 	private function refreshMonitors(int $depth, ?array &$missing = null, array &$listeners = []): void
 	{
