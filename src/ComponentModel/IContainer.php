@@ -34,7 +34,7 @@ interface IContainer extends IComponent
 
 	/**
 	 * Returns immediate child components.
-	 * @return array<int|string,IComponent>
+	 * @return array<int|string, IComponent>
 	 */
 	function getComponents(): iterable;
 }
