@@ -173,7 +173,7 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Returns all immediate child components.
-	 * @return array<int|string,IComponent>
+	 * @return array<int|string, IComponent>
 	 */
 	final public function getComponents(): iterable
 	{
