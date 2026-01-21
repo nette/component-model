@@ -33,6 +33,9 @@ abstract class Component implements IComponent
 	 */
 	private array $monitors = [];
 
+	/** Prevents nested listener execution during refreshMonitors */
+	private bool $callingListeners = false;
+
 
 	/**
 	 * Finds the closest ancestor of specified type.
@@ -264,13 +267,18 @@ abstract class Component implements IComponent
 			}
 		}
 
-		if ($depth === 0) { // call listeners
-			$called = [];
-			foreach ($listeners as [$callback, $component]) {
-				if (!in_array($key = [$callback, spl_object_id($component)], $called, strict: false)) { // deduplicate: same callback + same object = call once
-					$callback($component);
-					$called[] = $key;
+		if ($depth === 0 && !$this->callingListeners) { // call listeners
+			$this->callingListeners = true;
+			try {
+				$called = [];
+				foreach ($listeners as [$callback, $component]) {
+					if (!in_array($key = [$callback, spl_object_id($component)], $called, strict: false)) { // deduplicate: same callback + same object = call once
+						$callback($component);
+						$called[] = $key;
+					}
 				}
+			} finally {
+				$this->callingListeners = false;
 			}
 		}
 	}
