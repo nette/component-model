@@ -40,15 +40,15 @@ Assert::same([
 	'a',
 ], array_keys($list));
 
-// Filter
-$list = $c->getComponents(false, A::class);
+// Filter (deprecated)
+$list = @$c->getComponents(false, A::class);
 Assert::same([
 	'a',
 ], array_keys($list));
 
 
-// Recursive
-$list = $c->getComponents(true);
+// Recursive (deprecated)
+$list = @$c->getComponents(true);
 Assert::same([
 	'container',
 	'inner_b',
@@ -68,8 +68,8 @@ Assert::same([
 ], array_keys(iterator_to_array($list)));
 
 
-// Recursive & filter I
-$list = $c->getComponents(true, A::class);
+// Recursive & filter I (deprecated)
+$list = @$c->getComponents(true, A::class);
 Assert::same([
 	'inner_a',
 	'a',
@@ -81,8 +81,8 @@ Assert::same([
 ], array_keys(iterator_to_array($list)));
 
 
-// Recursive & filter II
-$list = $c->getComponents(true, Nette\ComponentModel\Container::class);
+// Recursive & filter II (deprecated)
+$list = @$c->getComponents(true, Nette\ComponentModel\Container::class);
 Assert::same([
 	'container',
 	'inner_container',
