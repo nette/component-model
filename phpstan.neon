@@ -4,3 +4,8 @@ parameters:
 	paths:
 		- src
 		- tests/types
+
+	checkMissingCallableSignature: true
+
+includes:
+	- phpstan-baseline.neon

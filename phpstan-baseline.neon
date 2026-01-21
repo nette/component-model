@@ -1,0 +1,43 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Property Nette\\ComponentModel\\Component\:\:\$monitors \(array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\|null\}\>\) does not accept array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{3\: array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\}\|array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\|null\}\>\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: src/ComponentModel/Component.php
+
+		-
+			message: '#^Property Nette\\ComponentModel\\Component\:\:\$monitors \(array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\|null\}\>\) does not accept non\-empty\-array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{3\: array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\}\|array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\|null\}\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/ComponentModel/Component.php
+
+		-
+			message: '#^Property Nette\\ComponentModel\\Component\:\:\$monitors \(array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\|null\}\>\) does not accept non\-empty\-array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{3\: array\{list\<Closure\(T\)\: void\>, non\-empty\-list\<Closure\(T\)\: void\>\}\}\|array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(T\)\: void\>, list\<Closure\(T\)\: void\>\}\|null\}\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/ComponentModel/Component.php
+
+		-
+			message: '#^Property Nette\\ComponentModel\\Component\:\:\$monitors \(array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\|null\}\>\) does not accept non\-empty\-array\<''''\|class\-string\<Nette\\ComponentModel\\IComponent\>, array\{3\: array\{non\-empty\-list\<Closure\(T\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\}\|array\{Nette\\ComponentModel\\IComponent\|null, int\|null, string\|null, array\{list\<Closure\(T\)\: void\>, list\<Closure\(Nette\\ComponentModel\\IComponent\)\: void\>\}\|null\}\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/ComponentModel/Component.php
+
+		-
+			message: '#^Method Nette\\ComponentModel\\Container\:\:getComponents\(\) should return array\<int\|string, Nette\\ComponentModel\\IComponent\> but returns CallbackFilterIterator\<mixed, mixed, RecursiveIteratorIterator\<Nette\\ComponentModel\\RecursiveComponentIterator\>\>\|RecursiveIteratorIterator\<Nette\\ComponentModel\\RecursiveComponentIterator\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ComponentModel/Container.php
+
+		-
+			message: '#^Method Nette\\ComponentModel\\IContainer\:\:getComponent\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/ComponentModel/Container.php
+
+		-
+			message: '#^Call to an undefined method Nette\\ComponentModel\\IComponent\:\:getComponents\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/ComponentModel/RecursiveComponentIterator.php
