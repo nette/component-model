@@ -177,8 +177,13 @@ class Container extends Component implements IContainer
 	 */
 	final public function getComponents(): iterable
 	{
+		if (func_get_args()[0] ?? null) {
+			trigger_error(__METHOD__ . '() with recursive flag is deprecated. Use getComponentTree() instead.', E_USER_DEPRECATED);
+		}
+
 		$filterType = func_get_args()[1] ?? null;
 		if (func_get_args()[0] ?? null) { // back compatibility
+			trigger_error('Using Container::getComponents() with filter type is deprecated.', E_USER_DEPRECATED);
 			$iterator = new RecursiveComponentIterator($this->components);
 			$iterator = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
 			if ($filterType) {
