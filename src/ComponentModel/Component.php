@@ -16,8 +16,6 @@ use function in_array, substr;
  */
 abstract class Component implements IComponent
 {
-	use Nette\SmartObject;
-
 	private ?IContainer $parent = null;
 	private ?string $name = null;
 
