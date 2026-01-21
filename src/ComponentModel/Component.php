@@ -29,7 +29,7 @@ abstract class Component implements IComponent
 	 * Combines cached lookup results with callback registrations for each monitored type.
 	 * Depth is used to detect when monitored ancestor becomes unreachable during detachment.
 	 * Structure: [type => [found object, depth to object, path to object, [[attached, ...], [detached, ...]]]]
-	 * @var array<string, array{?IComponent, ?int, ?string, array<int, ?array{callable[], callable[]}>}>
+	 * @var array<string, array{?IComponent, ?int, ?string, array<int, ?array{\Closure[], \Closure[]}>}>
 	 */
 	private array $monitors = [];
 
@@ -92,22 +92,22 @@ abstract class Component implements IComponent
 	final public function monitor(string $type, ?callable $attached = null, ?callable $detached = null): void
 	{
 		if (func_num_args() === 1) {
-			$attached = [$this, 'attached'];
-			$detached = [$this, 'detached'];
+			$attached = $this->attached(...);
+			$detached = $this->detached(...);
 		}
 
 		$ancestor = $this->lookup($type, throw: false);
 		$this->monitors[$type][3] ??= [[], []];
 
-		if ($attached && !in_array($attached, $this->monitors[$type][3][0], strict: false)) {
-			$this->monitors[$type][3][0][] = $attached;
+		if ($attached && !in_array($attached(...), $this->monitors[$type][3][0], strict: false)) {
+			$this->monitors[$type][3][0][] = $attached(...);
 			if ($ancestor) {
 				$attached($ancestor);
 			}
 		}
 
 		if ($detached) {
-			$this->monitors[$type][3][1][] = $detached;
+			$this->monitors[$type][3][1][] = $detached(...);
 		}
 	}
 
@@ -213,7 +213,7 @@ abstract class Component implements IComponent
 	/**
 	 * Refreshes monitors when attaching/detaching from component tree.
 	 * @param  ?array<string, true>  $missing  null = detaching, array = attaching
-	 * @param  array<int,array{callable,IComponent}>  $listeners
+	 * @param  array<int, array{\Closure, IComponent}>  $listeners
 	 */
 	private function refreshMonitors(int $depth, ?array &$missing = null, array &$listeners = []): void
 	{
