@@ -99,7 +99,7 @@ abstract class Component implements IComponent
 		$ancestor = $this->lookup($type, throw: false);
 		$this->monitors[$type][3] ??= [[], []];
 
-		if ($attached && !in_array($attached, $this->monitors[$type][3][0], strict: true)) {
+		if ($attached && !in_array($attached, $this->monitors[$type][3][0], strict: false)) {
 			$this->monitors[$type][3][0][] = $attached;
 			if ($ancestor) {
 				$attached($ancestor);
@@ -267,7 +267,7 @@ abstract class Component implements IComponent
 		if ($depth === 0) { // call listeners
 			$called = [];
 			foreach ($listeners as [$callback, $component]) {
-				if (!in_array($key = [$callback, $component], $called, strict: true)) { // deduplicate: same callback + same object = call once
+				if (!in_array($key = [$callback, spl_object_id($component)], $called, strict: false)) { // deduplicate: same callback + same object = call once
 					$callback($component);
 					$called[] = $key;
 				}
