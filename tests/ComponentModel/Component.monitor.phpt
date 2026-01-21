@@ -203,6 +203,28 @@ test('same handler deduplication during single attach', function () {
 });
 
 
+test('string callable and first-class callable are deduplicated', function () {
+	RootContainer::$log = [];
+
+	$root = new RootContainer;
+	$child = new BaseContainer;
+
+	// Register handler as string callable
+	$child->monitor(RootContainer::class, 'myGlobalHandler', 'myGlobalHandler');
+	// Register same handler as first-class callable
+	$child->monitor(RootContainer::class, myGlobalHandler(...), myGlobalHandler(...));
+
+	$root['child'] = $child;
+
+	// Handler should be called only once due to deduplication
+	Assert::same(['RootContainer'], RootContainer::$log);
+
+	RootContainer::$log = [];
+	unset($root['child']);
+	Assert::same(['RootContainer'], RootContainer::$log);
+});
+
+
 test('different handlers for same type all called', function () {
 	$log = [];
 	$handler1 = function ($obj) use (&$log) { $log[] = 'handler1: ' . $obj::class; };
