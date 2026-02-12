@@ -240,6 +240,7 @@ abstract class Component implements IComponent
 		if ($missing === null) { // detaching
 			foreach ($this->monitors as $type => [$ancestor, $inDepth, , $callbacks]) {
 				if (isset($inDepth) && $inDepth > $depth) { // only process if ancestor was deeper than current detachment point
+					assert($ancestor !== null);
 					if ($callbacks) {
 						$this->monitors[$type] = [null, null, null, $callbacks]; // clear cached object, keep listener registrations
 						foreach ($callbacks[1] as $detached) {
@@ -263,6 +264,7 @@ abstract class Component implements IComponent
 
 				} else { // need to check if ancestor exists
 					unset($this->monitors[$type]); // force fresh lookup
+					assert($type !== '');
 					if ($ancestor = $this->lookup($type, throw: false)) {
 						foreach ($callbacks[0] as $attached) {
 							$listeners[] = [$attached, $ancestor];

@@ -3,3 +3,34 @@ parameters:
 
 	paths:
 		- src
+
+	ignoreErrors:
+		- # trait is used via `use` in user code, not directly analysed
+			message: '#^Trait Nette\\ComponentModel\\ArrayAccess is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/ComponentModel/ArrayAccess.php
+
+		- # complex tuple type of $monitors is hard to express precisely for all mutation paths
+			message: '#^Property Nette\\ComponentModel\\Component\:\:\$monitors .+ does not accept .+\.$#'
+			identifier: assign.propertyType
+			count: 5
+			path: src/ComponentModel/Component.php
+
+		- # iterator wrapping is not expressible in return type
+			message: '#^Method Nette\\ComponentModel\\Container\:\:getComponents\(\) should return array\<int\|string, Nette\\ComponentModel\\IComponent\> but returns CallbackFilterIterator\<mixed, mixed, RecursiveIteratorIterator\<Nette\\ComponentModel\\RecursiveComponentIterator\>\>\|RecursiveIteratorIterator\<Nette\\ComponentModel\\RecursiveComponentIterator\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ComponentModel/Container.php
+
+		- # IContainer::getComponent() has optional $throw parameter in implementation
+			message: '#^Method Nette\\ComponentModel\\IContainer\:\:getComponent\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/ComponentModel/Container.php
+
+		- # duck-typing: IComponent may be IContainer with getComponents()
+			message: '#^Call to an undefined method Nette\\ComponentModel\\IComponent\:\:getComponents\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/ComponentModel/RecursiveComponentIterator.php
