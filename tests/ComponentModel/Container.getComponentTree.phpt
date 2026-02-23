@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\ComponentModel\Container::getComponentTree()
  */
-
-declare(strict_types=1);
 
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\Container;

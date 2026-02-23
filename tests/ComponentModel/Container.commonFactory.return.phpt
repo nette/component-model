@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\ComponentModel\Container component factory 1.
  */
-
-declare(strict_types=1);
 
 use Nette\ComponentModel\Container;
 use Nette\ComponentModel\IComponent;

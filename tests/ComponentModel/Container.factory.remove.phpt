@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\ComponentModel\Container component factory & remove inside.
  */
-
-declare(strict_types=1);
 
 use Nette\ComponentModel\Container;
 use Tester\Assert;
