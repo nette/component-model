@@ -8,13 +8,11 @@
 namespace Nette\ComponentModel;
 
 use Nette;
-use function array_filter, array_keys, array_map, array_merge, assert, explode, func_get_args, get_class_methods, method_exists, preg_filter, preg_match, reset, strval, ucfirst;
+use function strval;
 
 
 /**
  * Manages a collection of child components.
- *
- * @property-deprecated IComponent[] $components
  */
 class Container extends Component implements IContainer
 {
@@ -175,26 +173,9 @@ class Container extends Component implements IContainer
 	 * Returns all immediate child components.
 	 * @return array<int|string, IComponent>
 	 */
-	final public function getComponents(): iterable
+	final public function getComponents(): array
 	{
-		if (func_get_args()[0] ?? null) {
-			trigger_error(__METHOD__ . '() with recursive flag is deprecated. Use getComponentTree() instead.', E_USER_DEPRECATED);
-		}
-
-		$filterType = func_get_args()[1] ?? null;
-		if (func_get_args()[0] ?? null) { // back compatibility
-			trigger_error('Using Container::getComponents() with filter type is deprecated.', E_USER_DEPRECATED);
-			$iterator = new RecursiveComponentIterator($this->components);
-			$iterator = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
-			if ($filterType) {
-				$iterator = new \CallbackFilterIterator($iterator, fn($item) => $item instanceof $filterType);
-			}
-			return $iterator;
-		}
-
-		return $filterType
-			? array_filter($this->components, fn($item) => $item instanceof $filterType)
-			: $this->components;
+		return $this->components;
 	}
 
 
