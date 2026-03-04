@@ -134,6 +134,38 @@ test('child removes sibling before its listener runs', function () {
 });
 
 
+test('reentry protection - component processed only once', function () {
+	$root = new TestRoot;
+	$callCount = 0;
+
+	$component = new class ($callCount) extends Component {
+		public function __construct(
+			private int &$callCount,
+		) {
+		}
+
+
+		public function setupMonitoring(): void
+		{
+			$this->monitor(TestRoot::class, function (): void {
+				$this->callCount++;
+
+				$parent = $this->getParent();
+				if ($parent) {
+					$parent->removeComponent($this);
+					$parent->addComponent($this, $this->getName());
+				}
+			});
+		}
+	};
+
+	$component->setupMonitoring();
+	$root->addComponent($component, 'comp');
+
+	Assert::same(1, $callCount, 'Component processed exactly once');
+});
+
+
 test('deeply nested removal - depth-first traversal', function () {
 	$root = new TestRoot;
 	$level1 = new Container;
