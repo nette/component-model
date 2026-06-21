@@ -181,12 +181,14 @@ abstract class Component implements IComponent
 	 */
 	public function setParent(?IContainer $parent, ?string $name = null): static
 	{
-		if ($parent === null && $this->parent === null && $name !== null) {
-			$this->name = $name; // just rename
-			return $this;
+		if ($parent === $this->parent) { // parent unchanged
+			if ($name !== null && $parent !== null) {
+				throw new Nette\InvalidStateException("Component '$this->name' already has a parent.");
+			} elseif ($name !== null) {
+				$this->name = $name; // just rename
+			}
 
-		} elseif ($parent === $this->parent && $name === null) {
-			return $this; // nothing to do
+			return $this;
 		}
 
 		// A component cannot be given a parent if it already has a parent.
