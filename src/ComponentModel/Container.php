@@ -91,8 +91,10 @@ class Container extends Component implements IContainer
 			throw new Nette\InvalidArgumentException("Component named '$name' is not located in this container.");
 		}
 
-		unset($this->components[$name]);
 		$component->setParent(null);
+		if (($this->getComponents()[$name] ?? null) === $component) { // a listener may have removed it and put another one in its place
+			unset($this->components[$name]);
+		}
 	}
 
 
