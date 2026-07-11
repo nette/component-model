@@ -17,6 +17,12 @@ parameters:
 			count: 4
 			path: src/ComponentModel/Component.php
 
+		- # $cloning is written by Container::__clone() through a closure bound to the Component scope
+			message: '#^Property Nette\\ComponentModel\\Component\:\:\$cloning .+ is never assigned .+$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/ComponentModel/Component.php
+
 		- # IContainer::getComponent() has optional $throw parameter in implementation
 			message: '#^Method Nette\\ComponentModel\\IContainer\:\:getComponent\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count

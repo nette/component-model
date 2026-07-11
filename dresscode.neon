@@ -25,7 +25,3 @@ overrides:
 	- # in_array() deduplicates closures, which only a loose comparison finds equal
 		paths: [src/ComponentModel/Component.php]
 		mistakes: {strictArgument: keep}
-
-	- # _isCloning() is a public method other code may call
-		paths: [src/ComponentModel/Container.php]
-		naming: {method: keep}

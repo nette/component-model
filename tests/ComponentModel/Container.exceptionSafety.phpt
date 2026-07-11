@@ -32,6 +32,15 @@ class ThrowingOnDetach extends Component
 }
 
 
+class ThrowingOnClone extends Component
+{
+	public function __clone()
+	{
+		throw new RuntimeException('clone failed');
+	}
+}
+
+
 test('failed detach leaves the component in its place in the container', function () {
 	$container = new Container;
 	$container->addComponent(new Container, 'first');
@@ -90,4 +99,21 @@ test('listener that replaces the removed component keeps the replacement', funct
 	Assert::null($child->getParent());
 	Assert::same($replacement, $container->getComponent('child'));
 	Assert::same($container, $replacement->getParent());
+});
+
+
+test('failed clone does not leave the original container in cloning state', function () {
+	$sub = new Container;
+	$sub->addComponent($good = new Container, 'good');
+	$sub->addComponent(new ThrowingOnClone, 'bad');
+
+	Assert::exception(
+		fn() => clone $sub,
+		RuntimeException::class,
+		'clone failed',
+	);
+
+	// cloning a child of $sub now must detach it, not attach it to the discarded clone
+	$dolly = clone $good;
+	Assert::null($dolly->getParent());
 });

@@ -20,7 +20,6 @@ class Container extends Component implements IContainer
 
 	/** @var IComponent[] */
 	private array $components = [];
-	private ?Container $cloning = null;
 
 
 	/********************* interface IContainer ****************d*g**/
@@ -222,24 +221,16 @@ class Container extends Component implements IContainer
 		if ($this->components) {
 			$oldMyself = reset($this->components)->getParent();
 			assert($oldMyself instanceof self);
-			$oldMyself->cloning = $this;
-			foreach ($this->components as $name => $component) {
-				$this->components[$name] = clone $component;
+			\Closure::bind(fn(Container $clone) => $this->cloning = $clone, $oldMyself, Component::class)($this);
+			try {
+				foreach ($this->components as $name => $component) {
+					$this->components[$name] = clone $component;
+				}
+			} finally {
+				\Closure::bind(fn() => $this->cloning = null, $oldMyself, Component::class)();
 			}
-
-			$oldMyself->cloning = null;
 		}
 
 		parent::__clone();
-	}
-
-
-	/**
-	 * Is container cloning now?
-	 * @internal
-	 */
-	final public function _isCloning(): ?self
-	{
-		return $this->cloning;
 	}
 }

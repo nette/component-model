@@ -20,6 +20,9 @@ abstract class Component implements IComponent
 	private ?IContainer $parent = null;
 	private ?string $name = null;
 
+	/** The clone this component is being cloned into; set only while Container::__clone() runs. */
+	private ?Container $cloning = null;
+
 	/**
 	 * Monitors: tracks monitored ancestors and registered callbacks.
 	 * Combines cached lookup results with callback registrations for each monitored type.
@@ -285,7 +288,7 @@ abstract class Component implements IComponent
 			return;
 
 		} elseif ($this->parent instanceof Container) {
-			$this->parent = $this->parent->_isCloning();
+			$this->parent = $this->parent->cloning;
 			if ($this->parent === null) { // not cloning
 				$this->refreshMonitors(0);
 			}
