@@ -247,6 +247,45 @@ test('different handlers for same type all called', function () {
 });
 
 
+test('monitor requires at least one handler', function () {
+	Assert::exception(
+		fn() => (new BaseContainer)->monitor(A::class),
+		Nette\InvalidStateException::class,
+		'At least one handler is required.',
+	);
+});
+
+
+// A bogus type (including '') must behave like any other type that never matches:
+// a monitor that never fires. It must not collide with the internally cached root lookup.
+test('monitor of a type that never matches does not disturb the root lookup', function () {
+	$log = [];
+	$handler = function ($obj) use (&$log) { $log[] = $obj::class; };
+
+	$root = new RootContainer;
+	$child = new BaseContainer;
+	$root['child'] = $child;
+
+	$child->monitor('', $handler, $handler);
+	$child->monitor('Undefined\Klass', $handler, $handler);
+
+	// neither handler may fire - '' is not a type, it is not "the root"
+	Assert::same([], $log);
+
+	// the root lookup must still be intact
+	Assert::same($root, $child->lookup(null));
+	Assert::same('child', $child->lookupPath());
+
+	// attaching and detaching must not fire them either (and must not hit an assertion)
+	$other = new RootContainer;
+	unset($root['child']);
+	$other['child'] = $child;
+
+	Assert::same([], $log);
+	Assert::same($other, $child->lookup(null));
+});
+
+
 test('monitor attached in validateParent', function () {
 	RootContainer::$log = [];
 

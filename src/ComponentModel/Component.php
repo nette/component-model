@@ -15,6 +15,8 @@ use Nette;
  */
 abstract class Component implements IComponent
 {
+	private const RootKey = "\0root";
+
 	private ?IContainer $parent = null;
 	private ?string $name = null;
 
@@ -23,13 +25,13 @@ abstract class Component implements IComponent
 	 * Combines cached lookup results with callback registrations for each monitored type.
 	 * Depth is used to detect when monitored ancestor becomes unreachable during detachment.
 	 * Structure: [type => [found object, depth to object, path to object, [[attached, ...], [detached, ...]]]]
-	 * @var array<''|class-string<Nette\ComponentModel\IComponent>, array{?IComponent, ?int, ?string, ?array{list<\Closure(IComponent): void>, list<\Closure(IComponent): void>}}>
+	 * @var array<self::RootKey|class-string<Nette\ComponentModel\IComponent>, array{?IComponent, ?int, ?string, ?array{list<\Closure(IComponent): void>, list<\Closure(IComponent): void>}}>
 	 */
 	private array $monitors = [];
 
 
 	/**
-	 * Finds the closest ancestor of specified type.
+	 * Finds the closest ancestor of specified type, or the root when $type is null.
 	 * @template T of IComponent
 	 * @param ?class-string<T>  $type
 	 * @param bool  $throw  throw exception if component doesn't exist?
@@ -37,14 +39,14 @@ abstract class Component implements IComponent
 	 */
 	final public function lookup(?string $type, bool $throw = true): ?IComponent
 	{
-		$type ??= '';
-		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
+		$key = $type ?? self::RootKey;
+		if (!isset($this->monitors[$key])) { // not monitored or not processed yet
 			$ancestor = $this->parent;
 			$path = self::NameSeparator . $this->name;
 			$depth = 1;
 			while ($ancestor !== null) {
 				$parent = $ancestor->getParent();
-				if ($type ? $ancestor instanceof $type : $parent === null) {
+				if ($type === null ? $parent === null : $ancestor instanceof $type) {
 					break;
 				}
 
@@ -56,17 +58,17 @@ abstract class Component implements IComponent
 				}
 			}
 
-			$this->monitors[$type] = $ancestor
+			$this->monitors[$key] = $ancestor
 				? [$ancestor, $depth, substr($path, 1), null]
 				: [null, null, null, null]; // not found
 		}
 
-		if ($throw && $this->monitors[$type][0] === null) {
+		if ($throw && $this->monitors[$key][0] === null) {
 			$desc = $this->name === null ? "type of '" . static::class . "'" : "'$this->name'";
 			throw new Nette\InvalidStateException("Component $desc is not attached to '$type'.");
 		}
 
-		return $this->monitors[$type][0];
+		return $this->monitors[$key][0];
 	}
 
 
@@ -80,7 +82,7 @@ abstract class Component implements IComponent
 	final public function lookupPath(?string $type = null, bool $throw = true): ?string
 	{
 		$this->lookup($type, $throw);
-		return $this->monitors[$type ?? ''][2];
+		return $this->monitors[$type ?? self::RootKey][2];
 	}
 
 
@@ -222,7 +224,7 @@ abstract class Component implements IComponent
 
 				} else { // need to check if ancestor exists
 					unset($this->monitors[$type]); // force fresh lookup
-					assert($type !== '');
+					assert($type !== self::RootKey); // the root lookup is a cache entry only, it never carries listeners
 					if ($ancestor = $this->lookup($type, throw: false)) {
 						foreach ($callbacks[0] as $attached) {
 							if (!in_array($key = [$attached, spl_object_id($ancestor)], $called)) { // deduplicate: same callback + same object = call once
