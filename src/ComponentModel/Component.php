@@ -109,7 +109,7 @@ abstract class Component implements IComponent
 			}
 		}
 
-		if ($detached) {
+		if ($detached && !in_array($detached(...), $this->monitors[$type][3][1])) {
 			$this->monitors[$type][3][1][] = $detached(...);
 		}
 	}
