@@ -33,10 +33,7 @@ class Container extends Component implements IContainer
 	public function addComponent(IComponent $component, ?string $name, ?string $insertBefore = null): static
 	{
 		if ($name === null) {
-			$name = $component->getName();
-			if ($name === null) {
-				throw new Nette\InvalidStateException("Missing component's name.");
-			}
+			$name = $component->getName() ?? throw new Nette\InvalidStateException("Missing component's name.");
 		}
 
 		if (!preg_match(self::NameRegexp, $name)) {
@@ -68,6 +65,7 @@ class Container extends Component implements IContainer
 			}
 
 			$this->components = $tmp;
+
 		} else {
 			$this->components[$name] = $component;
 		}
@@ -132,10 +130,10 @@ class Container extends Component implements IContainer
 				throw new Nette\InvalidArgumentException("Component with name '$name' is not container and cannot have '$parts[1]' component.");
 			}
 		} elseif ($throw) {
-			$hint = Nette\Utils\ObjectHelpers::getSuggestion(array_merge(
-				array_map(strval(...), array_keys($this->components)),
-				array_map(lcfirst(...), preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this))),
-			), $name);
+			$hint = Nette\Utils\ObjectHelpers::getSuggestion([
+				...array_map(strval(...), array_keys($this->components)),
+				...array_map(lcfirst(...), preg_filter('#^createComponent([A-Z0-9].*)#', '$1', get_class_methods($this))),
+			], $name);
 			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist" . ($hint ? ", did you mean '$hint'?" : '.'));
 		}
 
@@ -194,7 +192,7 @@ class Container extends Component implements IContainer
 		foreach ($this->components as $component) {
 			$res[] = $component;
 			if ($component instanceof self) {
-				$res = array_merge($res, $component->getComponentTree());
+				$res = [...$res, ...$component->getComponentTree()];
 			}
 		}
 		return $res;

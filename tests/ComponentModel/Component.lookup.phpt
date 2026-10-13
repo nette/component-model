@@ -7,7 +7,6 @@
 use Nette\ComponentModel\Container;
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -41,7 +40,7 @@ $a['b']['c']['c2']['d'] = $d = new D;
 
 // top
 Assert::same($a, $d->lookup(null));
-Assert::same('b-c-c2-d', $d->lookupPath(null));
+Assert::same('b-c-c2-d', $d->lookupPath());
 
 // specified top
 Assert::same($a, $d->lookup(A::class));

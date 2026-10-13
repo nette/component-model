@@ -105,7 +105,7 @@ test('monitor with handlers', function () {
 
 	Assert::same('b-c-d-e', $d['e']->lookupPath(A::class));
 	Assert::same($a, $d['e']->lookup(A::class));
-	Assert::same('b-c-d-e', $d['e']->lookupPath(null));
+	Assert::same('b-c-d-e', $d['e']->lookupPath());
 	Assert::same($a, $d['e']->lookup(null));
 	Assert::same('c-d-e', $d['e']->lookupPath(B::class));
 	Assert::same($b, $d['e']->lookup(B::class));

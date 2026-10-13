@@ -43,15 +43,19 @@ function export($obj)
 class A extends BaseContainer
 {
 }
+
 class B extends BaseContainer
 {
 }
+
 class C extends BaseContainer
 {
 }
+
 class D extends BaseContainer
 {
 }
+
 class E extends BaseContainer
 {
 }

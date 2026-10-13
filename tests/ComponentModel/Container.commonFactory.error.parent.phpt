@@ -7,7 +7,6 @@
 use Nette\ComponentModel\{Container, IComponent};
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

@@ -13,10 +13,10 @@ class TestContainer extends Container
 {
 }
 
-/** @implements \ArrayAccess<string, IComponent> */
-class TestContainerWithArrayAccess extends Container implements \ArrayAccess
+/** @implements ArrayAccess<string, IComponent> */
+class TestContainerWithArrayAccess extends Container implements ArrayAccess
 {
-	use \Nette\ComponentModel\ArrayAccess;
+	use Nette\ComponentModel\ArrayAccess;
 }
 
 class TestComponent extends Component
@@ -57,7 +57,7 @@ function testLookupPath(TestComponent $component): void
 
 	assertType(
 		'string|null',
-		$component->lookupPath(null, throw: false),
+		$component->lookupPath(throw: false),
 	);
 
 	assertType(
