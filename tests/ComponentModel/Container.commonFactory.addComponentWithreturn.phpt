@@ -4,8 +4,7 @@
  * Test: Nette\ComponentModel\Container component factory 3.
  */
 
-use Nette\ComponentModel\Container;
-use Nette\ComponentModel\IComponent;
+use Nette\ComponentModel\{Container, IComponent};
 use Tester\Assert;
 
 

@@ -5,9 +5,7 @@
  * Run: vendor/bin/phpstan analyse tests/types
  */
 
-use Nette\ComponentModel\Component;
-use Nette\ComponentModel\Container;
-use Nette\ComponentModel\IComponent;
+use Nette\ComponentModel\{Component, Container, IComponent};
 use function PHPStan\Testing\assertType;
 
 

@@ -5,8 +5,7 @@
  * Tests behavior when components are removed during attachment processing.
  */
 
-use Nette\ComponentModel\Component;
-use Nette\ComponentModel\Container;
+use Nette\ComponentModel\{Component, Container};
 use Tester\Assert;
 
 
