@@ -8,7 +8,7 @@
 namespace Nette\ComponentModel;
 
 use Nette;
-use function strval;
+use function func_get_args;
 
 
 /**

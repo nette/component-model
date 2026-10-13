@@ -8,7 +8,6 @@
 namespace Nette\ComponentModel;
 
 use Nette;
-use function in_array, substr;
 
 
 /**
@@ -101,7 +100,7 @@ abstract class Component implements IComponent
 		$ancestor = $this->lookup($type, throw: false);
 		$this->monitors[$type][3] ??= [[], []];
 
-		if ($attached && !in_array($attached(...), $this->monitors[$type][3][0], strict: false)) {
+		if ($attached && !in_array($attached(...), $this->monitors[$type][3][0], false)) {
 			$this->monitors[$type][3][0][] = $attached(...);
 			if ($ancestor) {
 				$attached($ancestor);
@@ -226,7 +225,7 @@ abstract class Component implements IComponent
 					assert($type !== '');
 					if ($ancestor = $this->lookup($type, throw: false)) {
 						foreach ($callbacks[0] as $attached) {
-							if (!in_array($key = [$attached, spl_object_id($ancestor)], $called, strict: false)) { // deduplicate: same callback + same object = call once
+							if (!in_array($key = [$attached, spl_object_id($ancestor)], $called, false)) { // deduplicate: same callback + same object = call once
 								$attached($ancestor);
 								$called[] = $key;
 							}
@@ -258,7 +257,7 @@ abstract class Component implements IComponent
 					if ($callbacks) {
 						$this->monitors[$type] = [null, null, null, $callbacks]; // clear cached object, keep listener registrations
 						foreach ($callbacks[1] as $detached) {
-							if (!in_array($key = [$detached, spl_object_id($ancestor)], $called, strict: false)) { // deduplicate: same callback + same object = call once
+							if (!in_array($key = [$detached, spl_object_id($ancestor)], $called, false)) { // deduplicate: same callback + same object = call once
 								$detached($ancestor);
 								$called[] = $key;
 							}
