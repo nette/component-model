@@ -1,17 +1,13 @@
 {
 	"name": "nette/component-model",
-	"description": "⚛ Nette Component Model",
-	"keywords": ["nette", "components"],
-	"homepage": "https://nette.org",
+	"description": "🧩 Nette Component Model: the tree of named components that presenters, controls and forms in Nette are built on.",
+	"keywords": ["nette", "components", "component tree", "composite"],
+	"homepage": "https://doc.nette.org/component-model",
 	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
 	"authors": [
 		{
 			"name": "David Grudl",
 			"homepage": "https://davidgrudl.com"
-		},
-		{
-			"name": "Nette Community",
-			"homepage": "https://nette.org/contributors"
 		}
 	],
 	"require": {
