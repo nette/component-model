@@ -11,10 +11,10 @@ parameters:
 			count: 1
 			path: src/ComponentModel/ArrayAccess.php
 
-		- # complex tuple type of $monitors is hard to express precisely for all mutation paths
+		- # a handler takes the monitored type, which $monitors cannot express per key
 			message: '#^Property Nette\\ComponentModel\\Component\:\:\$monitors .+ does not accept .+\.$#'
 			identifier: assign.propertyType
-			count: 4
+			count: 2
 			path: src/ComponentModel/Component.php
 
 		- # $cloning is written by Container::__clone() through a closure bound to the Component scope

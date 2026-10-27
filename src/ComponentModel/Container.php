@@ -91,7 +91,7 @@ class Container extends Component implements IContainer
 		}
 
 		$component->setParent(null);
-		if (($this->getComponents()[$name] ?? null) === $component) { // a listener may have removed it and put another one in its place
+		if ($component->getParent() === null && ($this->getComponents()[$name] ?? null) === $component) { // unless a listener has put it back, or another one in its place
 			unset($this->components[$name]);
 		}
 	}

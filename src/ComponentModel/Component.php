@@ -20,17 +20,32 @@ abstract class Component implements IComponent
 	private ?IContainer $parent = null;
 	private ?string $name = null;
 
+	/** Counts the changes of the parent, so that a walk can tell that a handler has moved the component meanwhile. */
+	private int $moves = 0;
+
 	/** The clone this component is being cloned into; set only while Container::__clone() runs. */
 	private ?Container $cloning = null;
 
 	/**
-	 * Monitors: tracks monitored ancestors and registered callbacks.
-	 * Combines cached lookup results with callback registrations for each monitored type.
-	 * Depth is used to detect when monitored ancestor becomes unreachable during detachment.
-	 * Structure: [type => [found object, depth to object, path to object, [[attached, ...], [detached, ...]]]]
-	 * @var array<self::RootKey|class-string<Nette\ComponentModel\IComponent>, array{?IComponent, ?int, ?string, ?array{list<\Closure(IComponent): void>, list<\Closure(IComponent): void>}}>
+	 * Attached and detached handlers by monitored type.
+	 * @var array<class-string<IComponent>, array{list<\Closure(IComponent): void>, list<\Closure(IComponent): void>}>
 	 */
 	private array $monitors = [];
+
+	/**
+	 * Depth of the ancestor the handlers of a monitored type have been notified about as attached.
+	 * @var array<class-string<IComponent>, int>
+	 */
+	private array $attachedDepths = [];
+
+	/** @var array<class-string<IComponent>, true>  monitored types whose handlers are running */
+	private array $notifying = [];
+
+	/**
+	 * Cached ancestor and path by looked-up type, dropped whenever an ancestor changes.
+	 * @var array<self::RootKey|class-string<IComponent>, array{?IComponent, ?string}>
+	 */
+	private array $lookups = [];
 
 
 	/**
@@ -42,36 +57,13 @@ abstract class Component implements IComponent
 	 */
 	final public function lookup(?string $type, bool $throw = true): ?IComponent
 	{
-		$key = $type ?? self::RootKey;
-		if (!isset($this->monitors[$key])) { // not monitored or not processed yet
-			$ancestor = $this->parent;
-			$path = self::NameSeparator . $this->name;
-			$depth = 1;
-			while ($ancestor !== null) {
-				$parent = $ancestor->getParent();
-				if ($type === null ? $parent === null : $ancestor instanceof $type) {
-					break;
-				}
-
-				$path = self::NameSeparator . $ancestor->getName() . $path;
-				$depth++;
-				$ancestor = $parent; // IComponent::getParent()
-				if ($ancestor === $this) {
-					$ancestor = null; // prevent cycling
-				}
-			}
-
-			$this->monitors[$key] = $ancestor
-				? [$ancestor, $depth, substr($path, 1), null]
-				: [null, null, null, null]; // not found
-		}
-
-		if ($throw && $this->monitors[$key][0] === null) {
+		$entry = $this->lookups[$type ?? self::RootKey] ??= [$this->findAncestor($type)[0] ?? null, null];
+		if ($throw && $entry[0] === null) {
 			$desc = $this->name === null ? "type of '" . static::class . "'" : "'$this->name'";
 			throw new Nette\InvalidStateException("Component $desc is not attached to '$type'.");
 		}
 
-		return $this->monitors[$key][0];
+		return $entry[0];
 	}
 
 
@@ -84,8 +76,74 @@ abstract class Component implements IComponent
 	 */
 	final public function lookupPath(?string $type = null, bool $throw = true): ?string
 	{
-		$this->lookup($type, $throw);
-		return $this->monitors[$type ?? self::RootKey][2];
+		$ancestor = $this->lookup($type, $throw);
+		if ($ancestor === null) {
+			return null;
+		}
+
+		$key = $type ?? self::RootKey;
+		if (($path = $this->lookups[$key][1]) === null) {
+			$path = $this->name ?? '';
+			for ($obj = $this->parent; $obj !== null && $obj !== $ancestor; $obj = $obj->getParent()) {
+				$path = $obj->getName() . self::NameSeparator . $path;
+			}
+
+			$this->lookups[$key][1] = $path;
+		}
+
+		return $path;
+	}
+
+
+	/**
+	 * Finds the closest ancestor of specified type, or the root when $type is null, and its depth.
+	 * @template T of IComponent
+	 * @param ?class-string<T>  $type
+	 * @return ($type is null ? ?array{IComponent, int} : ?array{T, int})
+	 */
+	private function findAncestor(?string $type): ?array
+	{
+		$depth = 1;
+		for ($ancestor = $this->parent; $ancestor !== null && $ancestor !== $this; $ancestor = $parent) { // $this prevents cycling
+			$parent = $ancestor->getParent();
+			if ($type === null ? $parent === null : $ancestor instanceof $type) {
+				return [$ancestor, $depth];
+			}
+
+			$depth++;
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * Returns the ancestor $depth levels up.
+	 */
+	private function getAncestor(int $depth): IComponent
+	{
+		$ancestor = $this;
+		while ($depth--) {
+			$ancestor = $ancestor->getParent() ?? throw new Nette\ShouldNotHappenException;
+		}
+
+		return $ancestor;
+	}
+
+
+	/**
+	 * Drops the cached lookups of this subtree, whose ancestors have changed.
+	 */
+	private function forgetLookups(): void
+	{
+		$this->lookups = [];
+		if ($this instanceof IContainer) {
+			foreach ($this->getComponents() as $component) {
+				if ($component instanceof self) {
+					$component->forgetLookups();
+				}
+			}
+		}
 	}
 
 
@@ -102,18 +160,21 @@ abstract class Component implements IComponent
 			throw new Nette\InvalidStateException('At least one handler is required.');
 		}
 
-		$ancestor = $this->lookup($type, throw: false);
-		$this->monitors[$type][3] ??= [[], []];
+		$found = $this->findAncestor($type);
+		$this->monitors[$type] ??= [[], []];
+		if ($found) {
+			$this->attachedDepths[$type] = $found[1];
+		}
 
-		if ($attached && !in_array($attached(...), $this->monitors[$type][3][0])) {
-			$this->monitors[$type][3][0][] = $attached(...);
-			if ($ancestor) {
-				$attached($ancestor);
+		if ($attached && !in_array($attached(...), $this->monitors[$type][0])) {
+			$this->monitors[$type][0][] = $attached(...);
+			if ($found) {
+				$attached($found[0]);
 			}
 		}
 
-		if ($detached && !in_array($detached(...), $this->monitors[$type][3][1])) {
-			$this->monitors[$type][3][1][] = $detached(...);
+		if ($detached && !in_array($detached(...), $this->monitors[$type][1])) {
+			$this->monitors[$type][1][] = $detached(...);
 		}
 	}
 
@@ -124,7 +185,7 @@ abstract class Component implements IComponent
 	 */
 	final public function unmonitor(string $type): void
 	{
-		unset($this->monitors[$type]);
+		unset($this->monitors[$type], $this->attachedDepths[$type]);
 	}
 
 
@@ -169,23 +230,35 @@ abstract class Component implements IComponent
 			throw new Nette\InvalidStateException("Component '$this->name' already has a parent.");
 		}
 
-		// remove from parent
-		if ($parent === null) {
-			$this->refreshMonitors(0);
-			$this->parent = null;
+		if ($parent === null) { // remove from parent
+			$moves = $this->moves;
+			$this->detachMonitors(0);
+			if ($this->moves === $moves) { // unless a listener has moved the component meanwhile
+				$this->changeParent(null);
+			}
 
 		} else { // add to parent
 			$this->validateParent($parent);
-			$this->parent = $parent;
 			if ($name !== null) {
 				$this->name = $name;
 			}
 
-			$tmp = [];
-			$this->refreshMonitors(0, $tmp);
+			$this->changeParent($parent);
+			$this->attachMonitors();
 		}
 
 		return $this;
+	}
+
+
+	/**
+	 * Sets the parent and drops the cached lookups below, whose ancestors have changed.
+	 */
+	private function changeParent(?IContainer $parent): void
+	{
+		$this->parent = $parent;
+		$this->moves++;
+		$this->forgetLookups();
 	}
 
 
@@ -200,46 +273,23 @@ abstract class Component implements IComponent
 
 
 	/**
-	 * Refreshes monitors when attaching/detaching from component tree.
-	 * @param  ?array<string, true>  $missing  null = detaching, array = attaching
-	 * @param  array<array{\Closure(IComponent): void, int}>  $called  deduplication tracking
-	 * @param  array<int, true>  $processed  prevents reentry
+	 * Notifies the monitors of this subtree, which has just been attached, about the ancestors they have found.
+	 * @param  list<array{\Closure(IComponent): void, int, int, int}>  $called  deduplication tracking
+	 * @param  array<int, int>  $processed  prevents reentry, by the moves of each processed component
 	 */
-	private function refreshMonitors(
-		int $depth,
-		?array &$missing = null,
-		array &$called = [],
-		array &$processed = [],
-	): void
+	private function attachMonitors(array &$called = [], array &$processed = []): void
 	{
-		$processed[spl_object_id($this)] = true;
+		$processed[spl_object_id($this)] = $this->moves;
+		$moves = $this->moves;
 
-		if ($missing !== null) { // attaching
-			foreach ($this->monitors as $type => [$ancestor, , , $callbacks]) {
-				if (isset($ancestor)) { // already cached and valid - skip
-					continue;
-
-				} elseif (!$callbacks) { // no listeners, just old cached lookup - clear it
-					unset($this->monitors[$type]);
-
-				} elseif (isset($missing[$type])) { // already checked during this attach operation - ancestor not found
-					$this->monitors[$type] = [null, null, null, $callbacks]; // keep listener registrations but clear cache
-
-				} else { // need to check if ancestor exists
-					unset($this->monitors[$type]); // force fresh lookup
-					assert($type !== self::RootKey); // the root lookup is a cache entry only, it never carries listeners
-					if ($ancestor = $this->lookup($type, throw: false)) {
-						foreach ($callbacks[0] as $attached) {
-							if (!in_array($key = [$attached, spl_object_id($ancestor)], $called)) { // deduplicate: same callback + same object = call once
-								$attached($ancestor);
-								$called[] = $key;
-							}
-						}
-					} else {
-						$missing[$type] = true; // ancestor not found - remember so we don't check again
-					}
-
-					$this->monitors[$type][3] = $callbacks; // restore listener (lookup() cached result in $this->monitors[$type])
+		foreach (array_keys($this->monitors) as $type) {
+			if (!isset($this->attachedDepths[$type]) // not notified yet, the ancestor is not inside the subtree
+				&& ($found = $this->findAncestor($type))
+			) {
+				$this->attachedDepths[$type] = $found[1];
+				$this->notify($type, 0, $found[0], $called);
+				if ($this->moves !== $moves) {
+					return; // moved by a handler, the nested change has updated it
 				}
 			}
 		}
@@ -247,29 +297,105 @@ abstract class Component implements IComponent
 		if ($this instanceof IContainer) {
 			foreach ($this->getComponents() as $component) {
 				if ($component instanceof self
-					&& !isset($processed[spl_object_id($component)]) // component may have been processed already
+					&& ($processed[spl_object_id($component)] ?? null) !== $component->moves // not processed yet, or moved back since
 					&& $component->getParent() === $this  // may have been removed by previous sibling's listener
 				) {
-					$component->refreshMonitors($depth + 1, $missing, $called, $processed);
+					$component->attachMonitors($called, $processed);
+					if ($this->moves !== $moves) {
+						return;
+					}
 				}
 			}
 		}
+	}
 
-		if ($missing === null) { // detaching
-			foreach ($this->monitors as $type => [$ancestor, $inDepth, , $callbacks]) {
-				if (isset($inDepth) && $inDepth > $depth) { // only process if ancestor was deeper than current detachment point
-					assert($ancestor !== null);
-					if ($callbacks) {
-						$this->monitors[$type] = [null, null, null, $callbacks]; // clear cached object, keep listener registrations
-						foreach ($callbacks[1] as $detached) {
-							if (!in_array($key = [$detached, spl_object_id($ancestor)], $called)) { // deduplicate: same callback + same object = call once
-								$detached($ancestor);
-								$called[] = $key;
-							}
+
+	/**
+	 * Notifies the monitors of this subtree, which is about to be cut off $depth levels above, about the ancestors they lose.
+	 * @param  list<array{\Closure(IComponent): void, int, int, int}>  $called  deduplication tracking
+	 * @param  array<int, int>  $processed  prevents reentry, by the moves of each processed component
+	 */
+	private function detachMonitors(int $depth, array &$called = [], array &$processed = []): void
+	{
+		$processed[spl_object_id($this)] = $this->moves;
+		$moves = $this->moves;
+		$own = false;
+
+		do { // the children again until none is new, as a handler may have added one, which leaves with the rest
+			$more = false;
+			if ($this instanceof IContainer) {
+				foreach ($this->getComponents() as $component) {
+					if ($component instanceof self
+						&& ($processed[spl_object_id($component)] ?? null) !== $component->moves // not processed yet, or moved back since
+						&& $component->getParent() === $this  // may have been removed by previous sibling's listener
+					) {
+						$component->detachMonitors($depth + 1, $called, $processed);
+						if ($this->moves !== $moves) {
+							return;
 						}
-					} else { // no listeners, just cached lookup result - clear it
-						unset($this->monitors[$type]);
+
+						$more = true;
 					}
+				}
+			}
+
+			if (!$more && !$own) { // own monitors after the children, then the children once more
+				$own = $more = true;
+				$types = array_keys($this->attachedDepths);
+				foreach ($types as $type) {
+					$ancestorDepth = $this->attachedDepths[$type] ?? 0; // a previous handler may have changed it
+					if ($ancestorDepth > $depth) { // the ancestor lies beyond the cut, an ancestor inside the subtree stays
+						unset($this->attachedDepths[$type]);
+						$this->notify($type, 1, $this->getAncestor($ancestorDepth), $called);
+						if ($this->moves !== $moves) {
+							return; // moved by a handler, the nested change has updated it
+						}
+					}
+				}
+			}
+		} while ($more);
+	}
+
+
+	/**
+	 * Calls the attached (0) or detached (1) handlers of $type, unless they are running already: a change
+	 * they make to their own component is not reported to them while they run, but once they return.
+	 * @param  class-string<IComponent>  $type
+	 * @param  0|1  $kind
+	 * @param  list<array{\Closure(IComponent): void, int, int, int}>  $called
+	 */
+	private function notify(string $type, int $kind, IComponent $ancestor, array &$called): void
+	{
+		if (isset($this->notifying[$type])) {
+			return;
+		}
+
+		$moves = $this->moves;
+		$this->notifying[$type] = true;
+		try {
+			foreach ($this->monitors[$type][$kind] ?? [] as $handler) {
+				if (!in_array($key = [$handler, spl_object_id($ancestor), spl_object_id($this), $this->moves], $called)) { // deduplicate: same callback + same object = call once, until the component moves
+					$handler($ancestor);
+					$called[] = $key;
+				}
+			}
+		} finally {
+			unset($this->notifying[$type]);
+		}
+
+		// a handler may have moved the component or cut off an ancestor, the nested change has updated the state;
+		// while detaching, the ancestor is still there until the walk ends, so only a move of its own counts
+		if ($kind === 0 || $this->moves !== $moves) {
+			$told = $kind === 0 ? $ancestor : null;
+			$found = $this->findAncestor($type);
+			if (($found[0] ?? null) !== $told) {
+				$reconciled = [];
+				if ($told) {
+					$this->notify($type, 1, $told, $reconciled);
+				}
+
+				if ($found) {
+					$this->notify($type, 0, $found[0], $reconciled);
 				}
 			}
 		}
@@ -284,17 +410,13 @@ abstract class Component implements IComponent
 	 */
 	public function __clone()
 	{
-		if ($this->parent === null) {
-			return;
+		$this->notifying = [];
+		if ($this->parent instanceof Container && $this->parent->cloning) {
+			$this->changeParent($this->parent->cloning); // reattach to the clone of the parent
 
-		} elseif ($this->parent instanceof Container) {
-			$this->parent = $this->parent->cloning;
-			if ($this->parent === null) { // not cloning
-				$this->refreshMonitors(0);
-			}
-		} else {
-			$this->parent = null;
-			$this->refreshMonitors(0);
+		} elseif ($this->parent !== null) { // a standalone clone leaves the tree
+			$this->detachMonitors(0);
+			$this->changeParent(null);
 		}
 	}
 

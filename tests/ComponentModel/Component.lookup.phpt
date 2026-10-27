@@ -81,3 +81,71 @@ Assert::exception(
 	Nette\InvalidStateException::class,
 	"Component 'd' is not attached to 'Unknown'.",
 );
+
+
+// the answer follows the tree, also after a lookup was made
+$sub = new B;
+$sub['x'] = $x = new C;
+Assert::same($sub, $x->lookup(null));
+Assert::same('x', $x->lookupPath());
+Assert::null($x->lookup(A::class, throw: false));
+
+$top = new A;
+$top['sub'] = $sub;
+Assert::same($top, $x->lookup(null));
+Assert::same('sub-x', $x->lookupPath());
+Assert::same($top, $x->lookup(A::class));
+
+unset($top['sub']);
+Assert::same($sub, $x->lookup(null));
+Assert::null($x->lookup(A::class, throw: false));
+
+
+// a clone answers with the cloned ancestors
+$dolly = clone $a;
+Assert::same($dolly, $dolly['b']['c']['c2']['d']->lookup(A::class));
+Assert::same($dolly['b'], $dolly['b']['c']['c2']['d']->lookup(B::class));
+Assert::same($a, $d->lookup(A::class));
+
+
+// a lookup made by a detached handler, before the parent is cleared, does not outlive the removal
+$top = new A;
+$top['sub'] = $sub = new B;
+$sub['x'] = $x = new C;
+$x->monitor(A::class, detached: function () use ($x, $top): void {
+	Assert::same($top, $x->lookup(A::class));
+	Assert::same('sub-x', $x->lookupPath());
+});
+unset($top['sub']);
+Assert::null($x->lookup(A::class, throw: false));
+Assert::same($sub, $x->lookup(null));
+Assert::same('x', $x->lookupPath());
+
+
+// renaming changes the paths below
+$top = new A;
+$top['sub'] = $sub = new B;
+$sub['x'] = $x = new C;
+Assert::same('sub-x', $x->lookupPath(A::class));
+unset($top['sub']);
+$sub->setParent(null, 'renamed');
+$top->addComponent($sub, null);
+Assert::same('renamed-x', $x->lookupPath(A::class));
+
+
+// a lookup in a __clone() override, made while the clone is still attached above, does not outlive the cloning
+class LookingOnClone extends C
+{
+	public function __clone()
+	{
+		parent::__clone();
+		$this->lookup(A::class, throw: false);
+	}
+}
+
+$top = new A;
+$top['sub'] = $sub = new B;
+$sub['x'] = new LookingOnClone;
+$dolly = clone $sub;
+Assert::null($dolly->getParent());
+Assert::null($dolly['x']->lookup(A::class, throw: false));
