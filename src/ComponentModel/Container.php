@@ -72,7 +72,12 @@ class Container extends Component implements IContainer
 		try {
 			$component->setParent($this, $name);
 		} catch (\Throwable $e) {
-			unset($this->components[$name]); // undo
+			if (($this->getComponents()[$name] ?? null) === $component
+				&& ($component->getParent() !== $this || $component->getName() !== $name) // unless a listener has put it back
+			) {
+				unset($this->components[$name]); // undo
+			}
+
 			throw $e;
 		}
 

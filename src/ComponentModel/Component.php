@@ -230,21 +230,43 @@ abstract class Component implements IComponent
 			throw new Nette\InvalidStateException("Component '$this->name' already has a parent.");
 		}
 
+		// a listener that throws vetoes the change, which is rolled back by the opposite walk,
+		// unless a listener has moved the component meanwhile
 		if ($parent === null) { // remove from parent
 			$moves = $this->moves;
-			$this->detachMonitors(0);
-			if ($this->moves === $moves) { // unless a listener has moved the component meanwhile
+			try {
+				$this->detachMonitors(0);
+			} catch (\Throwable $e) {
+				if ($this->moves === $moves) {
+					$this->attachMonitors(rollingBack: true);
+				}
+
+				throw $e;
+			}
+
+			if ($this->moves === $moves) {
 				$this->changeParent(null);
 			}
 
 		} else { // add to parent
 			$this->validateParent($parent);
-			if ($name !== null) {
-				$this->name = $name;
-			}
-
+			$oldName = $this->name;
+			$this->name = $name ?? $oldName;
 			$this->changeParent($parent);
-			$this->attachMonitors();
+			$moves = $this->moves;
+			try {
+				$this->attachMonitors();
+			} catch (\Throwable $e) {
+				if ($this->moves === $moves) {
+					$this->detachMonitors(0, rollingBack: true);
+					if ($this->moves === $moves) { // a handler of the rollback may have moved it too
+						$this->name = $oldName;
+						$this->changeParent(null);
+					}
+				}
+
+				throw $e;
+			}
 		}
 
 		return $this;
@@ -274,10 +296,11 @@ abstract class Component implements IComponent
 
 	/**
 	 * Notifies the monitors of this subtree, which has just been attached, about the ancestors they have found.
+	 * A rollback goes on past handlers that throw.
 	 * @param  list<array{\Closure(IComponent): void, int, int, int}>  $called  deduplication tracking
 	 * @param  array<int, int>  $processed  prevents reentry, by the moves of each processed component
 	 */
-	private function attachMonitors(array &$called = [], array &$processed = []): void
+	private function attachMonitors(bool $rollingBack = false, array &$called = [], array &$processed = []): void
 	{
 		$processed[spl_object_id($this)] = $this->moves;
 		$moves = $this->moves;
@@ -287,7 +310,7 @@ abstract class Component implements IComponent
 				&& ($found = $this->findAncestor($type))
 			) {
 				$this->attachedDepths[$type] = $found[1];
-				$this->notify($type, 0, $found[0], $called);
+				$this->notify($type, 0, $found[0], $rollingBack, $called);
 				if ($this->moves !== $moves) {
 					return; // moved by a handler, the nested change has updated it
 				}
@@ -300,7 +323,7 @@ abstract class Component implements IComponent
 					&& ($processed[spl_object_id($component)] ?? null) !== $component->moves // not processed yet, or moved back since
 					&& $component->getParent() === $this  // may have been removed by previous sibling's listener
 				) {
-					$component->attachMonitors($called, $processed);
+					$component->attachMonitors($rollingBack, $called, $processed);
 					if ($this->moves !== $moves) {
 						return;
 					}
@@ -312,10 +335,16 @@ abstract class Component implements IComponent
 
 	/**
 	 * Notifies the monitors of this subtree, which is about to be cut off $depth levels above, about the ancestors they lose.
+	 * A rollback goes on past handlers that throw.
 	 * @param  list<array{\Closure(IComponent): void, int, int, int}>  $called  deduplication tracking
 	 * @param  array<int, int>  $processed  prevents reentry, by the moves of each processed component
 	 */
-	private function detachMonitors(int $depth, array &$called = [], array &$processed = []): void
+	private function detachMonitors(
+		int $depth,
+		bool $rollingBack = false,
+		array &$called = [],
+		array &$processed = [],
+	): void
 	{
 		$processed[spl_object_id($this)] = $this->moves;
 		$moves = $this->moves;
@@ -329,7 +358,7 @@ abstract class Component implements IComponent
 						&& ($processed[spl_object_id($component)] ?? null) !== $component->moves // not processed yet, or moved back since
 						&& $component->getParent() === $this  // may have been removed by previous sibling's listener
 					) {
-						$component->detachMonitors($depth + 1, $called, $processed);
+						$component->detachMonitors($depth + 1, $rollingBack, $called, $processed);
 						if ($this->moves !== $moves) {
 							return;
 						}
@@ -346,7 +375,7 @@ abstract class Component implements IComponent
 					$ancestorDepth = $this->attachedDepths[$type] ?? 0; // a previous handler may have changed it
 					if ($ancestorDepth > $depth) { // the ancestor lies beyond the cut, an ancestor inside the subtree stays
 						unset($this->attachedDepths[$type]);
-						$this->notify($type, 1, $this->getAncestor($ancestorDepth), $called);
+						$this->notify($type, 1, $this->getAncestor($ancestorDepth), $rollingBack, $called);
 						if ($this->moves !== $moves) {
 							return; // moved by a handler, the nested change has updated it
 						}
@@ -364,24 +393,30 @@ abstract class Component implements IComponent
 	 * @param  0|1  $kind
 	 * @param  list<array{\Closure(IComponent): void, int, int, int}>  $called
 	 */
-	private function notify(string $type, int $kind, IComponent $ancestor, array &$called): void
+	private function notify(string $type, int $kind, IComponent $ancestor, bool $rollingBack, array &$called): void
 	{
 		if (isset($this->notifying[$type])) {
 			return;
 		}
 
 		$moves = $this->moves;
+		$failure = null;
 		$this->notifying[$type] = true;
-		try {
-			foreach ($this->monitors[$type][$kind] ?? [] as $handler) {
-				if (!in_array($key = [$handler, spl_object_id($ancestor), spl_object_id($this), $this->moves], $called)) { // deduplicate: same callback + same object = call once, until the component moves
+		foreach ($this->monitors[$type][$kind] ?? [] as $handler) {
+			if (!in_array($key = [$handler, spl_object_id($ancestor), spl_object_id($this), $this->moves], $called)) { // deduplicate: same callback + same object = call once, until the component moves
+				try {
 					$handler($ancestor);
-					$called[] = $key;
+				} catch (\Throwable $e) {
+					if (!$rollingBack) { // the others of the type are called too, so the rollback balances all of them
+						$failure ??= $e;
+					}
 				}
+
+				$called[] = $key;
 			}
-		} finally {
-			unset($this->notifying[$type]);
 		}
+
+		unset($this->notifying[$type]);
 
 		// a handler may have moved the component or cut off an ancestor, the nested change has updated the state;
 		// while detaching, the ancestor is still there until the walk ends, so only a move of its own counts
@@ -391,13 +426,17 @@ abstract class Component implements IComponent
 			if (($found[0] ?? null) !== $told) {
 				$reconciled = [];
 				if ($told) {
-					$this->notify($type, 1, $told, $reconciled);
+					$this->notify($type, 1, $told, $rollingBack || $failure, $reconciled);
 				}
 
 				if ($found) {
-					$this->notify($type, 0, $found[0], $reconciled);
+					$this->notify($type, 0, $found[0], $rollingBack || $failure, $reconciled);
 				}
 			}
+		}
+
+		if ($failure) {
+			throw $failure;
 		}
 	}
 
