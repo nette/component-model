@@ -8,7 +8,7 @@
 namespace Nette\ComponentModel;
 
 use Nette;
-use function func_num_args, in_array, substr;
+use function func_num_args;
 
 
 /**
@@ -112,7 +112,7 @@ abstract class Component implements IComponent
 		$ancestor = $this->lookup($type, throw: false);
 		$this->monitors[$type][3] ??= [[], []];
 
-		if ($attached && !in_array($attached(...), $this->monitors[$type][3][0], strict: false)) {
+		if ($attached && !in_array($attached(...), $this->monitors[$type][3][0], false)) {
 			$this->monitors[$type][3][0][] = $attached(...);
 			if ($ancestor) {
 				$attached($ancestor);
@@ -287,7 +287,7 @@ abstract class Component implements IComponent
 			try {
 				$called = [];
 				foreach ($listeners as [$callback, $component]) {
-					if (!in_array($key = [$callback, $component], $called, strict: false)) { // deduplicate: same callback + same object = call once
+					if (!in_array($key = [$callback, $component], $called, false)) { // deduplicate: same callback + same object = call once
 						$callback($component);
 						$called[] = $key;
 					}
