@@ -64,7 +64,7 @@ class MonitoringComponent extends BaseContainer
 	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
-		@$this->monitor(self::class); // deprecated
+		@$this->monitor(self::class); // @ monitor() without handlers is deprecated
 	}
 }
 
@@ -77,8 +77,8 @@ class DoubleMonitoringComponent extends BaseContainer
 	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
-		@$this->monitor(RootContainer::class); // deprecated
-		@$this->monitor(BaseContainer::class); // double
+		@$this->monitor(RootContainer::class); // @ monitor() without handlers is deprecated
+		@$this->monitor(BaseContainer::class); // @ monitor() without handlers is deprecated
 	}
 }
 
@@ -89,9 +89,9 @@ test('attached and detached callbacks', function () {
 	$d = new D;
 	$d['e'] = new E;
 	$b = new B;
-	@$b->monitor(A::class); // deprecated
+	@$b->monitor(A::class); // @ monitor() without handlers is deprecated
 	$b['c'] = new C;
-	@$b['c']->monitor(A::class); // deprecated
+	@$b['c']->monitor(A::class); // @ monitor() without handlers is deprecated
 	$b['c']['d'] = $d;
 
 	// 'a' becoming 'b' parent
@@ -117,9 +117,9 @@ test('lookup methods', function () {
 	$d = new D;
 	$d['e'] = new E;
 	$b = new B;
-	@$b->monitor(A::class); // deprecated
+	@$b->monitor(A::class); // @ monitor() without handlers is deprecated
 	$b['c'] = new C;
-	@$b['c']->monitor(A::class); // deprecated
+	@$b['c']->monitor(A::class); // @ monitor() without handlers is deprecated
 	$b['c']['d'] = $d;
 
 	$a = new A;
@@ -127,7 +127,7 @@ test('lookup methods', function () {
 
 	Assert::same('b-c-d-e', $d['e']->lookupPath(A::class));
 	Assert::same($a, $d['e']->lookup(A::class));
-	Assert::same('b-c-d-e', $d['e']->lookupPath(null));
+	Assert::same('b-c-d-e', $d['e']->lookupPath());
 	Assert::same($a, $d['e']->lookup(null));
 	Assert::same('c-d-e', $d['e']->lookupPath(B::class));
 	Assert::same($b, $d['e']->lookup(B::class));

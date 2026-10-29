@@ -7,6 +7,7 @@
 
 namespace Nette\ComponentModel;
 
+
 /**
  * Recursive component iterator. See Container::getComponents().
  * @internal

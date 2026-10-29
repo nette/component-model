@@ -8,7 +8,6 @@
 use Nette\ComponentModel\{Component, Container};
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -216,7 +215,7 @@ test('component moved to later-visited container is not reprocessed', function (
 	$mover = new class ($callCount, $secondContainer) extends Component {
 		public function __construct(
 			private int &$callCount,
-			private Container $target,
+			private readonly Container $target,
 		) {
 		}
 

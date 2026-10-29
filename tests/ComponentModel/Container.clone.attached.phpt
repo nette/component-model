@@ -46,15 +46,19 @@ function export($obj)
 class A extends BaseContainer
 {
 }
+
 class B extends BaseContainer
 {
 }
+
 class C extends BaseContainer
 {
 }
+
 class D extends BaseContainer
 {
 }
+
 class E extends BaseContainer
 {
 }
@@ -69,8 +73,8 @@ test('monitor registration', function () {
 	$a['b']['c']['d'] = new D;
 	$a['b']['c']['d']['e'] = new E;
 
-	@$a['b']->monitor(A::class); // deprecated
-	@$a['b']['c']->monitor(A::class); // deprecated
+	@$a['b']->monitor(A::class); // @ monitor() without handlers is deprecated
+	@$a['b']['c']->monitor(A::class); // @ monitor() without handlers is deprecated
 
 	Assert::same([
 		'B::ATTACHED(A)',
@@ -88,8 +92,8 @@ test('clone detaches from parent', function () {
 	$a['b']['c']['d'] = new D;
 	$a['b']['c']['d']['e'] = new E;
 
-	@$a['b']->monitor(A::class); // deprecated
-	@$a['b']['c']->monitor(A::class); // deprecated
+	@$a['b']->monitor(A::class); // @ monitor() without handlers is deprecated
+	@$a['b']['c']->monitor(A::class); // @ monitor() without handlers is deprecated
 
 	BaseContainer::$log = [];
 
@@ -112,8 +116,8 @@ test('clone subtree', function () {
 	$a['b']['c']['d'] = new D;
 	$a['b']['c']['d']['e'] = new E;
 
-	@$a['b']->monitor(A::class); // deprecated
-	@$a['b']['c']->monitor(A::class); // deprecated
+	@$a['b']->monitor(A::class); // @ monitor() without handlers is deprecated
+	@$a['b']['c']->monitor(A::class); // @ monitor() without handlers is deprecated
 
 	BaseContainer::$log = [];
 
@@ -134,8 +138,8 @@ test('reattach cloned component', function () {
 	$a['b']['c']['d'] = new D;
 	$a['b']['c']['d']['e'] = new E;
 
-	@$a['b']->monitor(A::class); // deprecated
-	@$a['b']['c']->monitor(A::class); // deprecated
+	@$a['b']->monitor(A::class); // @ monitor() without handlers is deprecated
+	@$a['b']['c']->monitor(A::class); // @ monitor() without handlers is deprecated
 
 	$dolly = clone $a['b'];
 
