@@ -4,9 +4,7 @@
  * Test: Nette\ComponentModel\Container cloning.
  */
 
-use Nette\ComponentModel\Container;
-use Nette\ComponentModel\IComponent;
-use Nette\ComponentModel\IContainer;
+use Nette\ComponentModel\{Container, IComponent, IContainer};
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';

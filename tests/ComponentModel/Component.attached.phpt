@@ -4,8 +4,7 @@
  * Test: Nette\ComponentModel\Container::attached()
  */
 
-use Nette\ComponentModel\Container;
-use Nette\ComponentModel\IComponent;
+use Nette\ComponentModel\{Container, IComponent};
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
